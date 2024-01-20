@@ -4,7 +4,7 @@ Hello, I am Yahya Efe Kuruçay.
 
 I am a computer engineering student at Akdeniz University.
 
-This repo contains the programming assignments I have completed in my Akdeniz University laboratory courses.
+This repo contains the programming assignments I have completed in my Akdeniz University programming lectures.
 
 The assignments are written in Java.
 
