@@ -17,11 +17,39 @@
 
 public class Assignment01_20220808005 {
     public static void main(String[] args) {
-        Course cor= new Course("CSE", 102, null, null, 0);
-       
-        System.out.println( cor.getDepartmentCode()+cor.getCourseNumber());
+       Course c = new Course("CSE", 102, "Programming 2", "Introduction to OOP", 6);
+       System.out.println(c.courseCode()+" - "+c.getTitle());
+       System.out.println(c);
+
+       Teacher t = new Teacher("Joseph LEDET","josephledet@akdeniz.edu.tr",123L,"CSE",1);
+       System.out.println(t);
+
+       Student s = new Student("Yahya Efe Kurucay", "me@efekurucay.com", 456L, "CSE");
+       System.out.println(s);
+
+       s.passCourse(c);
+       System.out.println(s.getAKTS());
+
+       System.out.println("---------");
+
+       Course course = new Course("CSE", 101, "Computer Programming 1", "Introduction to Programming", 6);
+       Student student = new Student("Eraslan", "eraslan@efekurucay.com",123L, "CSE");
+       student.passCourse(course);
+       course.setCourseNumber(course.getCourseNumber()+10);
+       System.out.println(student);
+       System.out.println(course);
+       course = new Course("CSE", 102, "Computer Programming 2", "Introduction to OOP", 4);
+       student.passCourse(course);
+       course.setCourseNumber(course.getCourseNumber()-10);
+       System.out.println(course);
+       System.out.println(student);
+
+
+
     }
 }//class Assignment01
+
+
 
 //Course class
 class Course{
@@ -39,6 +67,7 @@ class Course{
         this.title = title;
         this.description = description;
         this.AKTS = AKTS;
+        
     }
 
     String getDepartmentCode(){return depCode;}
@@ -175,12 +204,67 @@ class Teacher extends Person{
 
 //Student class 
 class Student extends Person{
+    private int AKTS;
 
+    public Student(String name, String email, long ID, String departmentCode) {
+        super(name, email, ID, departmentCode);
+        this.AKTS = 0;
+    }
+
+    public int getAKTS() {
+        return AKTS;
+    }
+
+    public void passCourse(Course course) {
+        AKTS += course.getAKTS();
+    }
 }//Student class 
 
 
 //GradStudent class
 class GradStudent extends Student{
+
+    private int rank;
+    private String thesisTopic;
+
+    public GradStudent(String name, String email, long ID, String departmentCode, int rank, String thesisTopic) {
+        super(name, email, ID, departmentCode);
+        this.rank = rank;
+        this.thesisTopic = thesisTopic;
+    }
+
+    public void setRank(int rank) {
+        if (rank == 1 || rank == 2 || rank == 3) {
+            this.rank = rank;
+        } else {
+            throw new IllegalArgumentException("Invalid rank value.");
+        }
+    }
+
+    public String getLevel() {
+        switch (rank) {
+            case 1:
+                return "Master's Student";
+            case 2:
+                return "Doctoral Student";
+            case 3:
+                return "Doctoral Candidate";
+            default:
+                return "";
+        }
+    }
+
+    public String getThesisTopic() {
+        return thesisTopic;
+    }
+
+    public void setThesisTopic(String thesisTopic) {
+        this.thesisTopic = thesisTopic;
+    }
+
+    public String toString() {
+        return getLevel() + " - " + super.toString();
+    }
 
 }//GradStudent class 
 
