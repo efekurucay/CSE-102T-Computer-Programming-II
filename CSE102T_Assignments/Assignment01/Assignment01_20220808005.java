@@ -24,7 +24,7 @@ public class Assignment01_20220808005 {
        Teacher t = new Teacher("Joseph LEDET","josephledet@akdeniz.edu.tr",123L,"CSE",1);
        System.out.println(t);
 
-       Student s = new Student("Yahya Efe Kurucay", "me@efekurucay.com", 456L, "CSE");
+       Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, "CSE");
        System.out.println(s);
 
        s.passCourse(c);
@@ -33,7 +33,7 @@ public class Assignment01_20220808005 {
        System.out.println("---------");
 
        Course course = new Course("CSE", 101, "Computer Programming 1", "Introduction to Programming", 6);
-       Student student = new Student("Eraslan", "eraslan@efekurucay.com",123L, "CSE");
+       Student student = new Student("Yahya Efe", "yahya@efekurucay.com",123L, "CSE");
        student.passCourse(course);
        course.setCourseNumber(course.getCourseNumber()+10);
        System.out.println(student);
@@ -51,9 +51,7 @@ public class Assignment01_20220808005 {
 
 
 
-//Course class
 class Course{
-
     private String depCode; //Must be 3 or 4 characters
     private int courseNum; //Must be in the range 100-999 or 5000-5999 or 7000-7999 
     private String title;
@@ -89,13 +87,10 @@ class Course{
 
     public String toString() {
         return courseCode() + " - " + title + " (" + AKTS + ")";
+    }
+
+
 }
-
-
-
-
-}//Course class
-
 //Person class
 class Person{
 
