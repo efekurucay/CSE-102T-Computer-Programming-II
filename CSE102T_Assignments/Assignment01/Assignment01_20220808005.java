@@ -1,3 +1,4 @@
+import java.security.GeneralSecurityException;
 
 /**---------------------------------------------------
 
@@ -35,12 +36,12 @@ public class Assignment01_20220808005 {
        Course course = new Course("CSE", 101, "Computer Programming 1", "Introduction to Programming", 6);
        Student student = new Student("Yahya Efe", "yahya@efekurucay.com",123L, "CSE");
        student.passCourse(course);
-       course.setCourseNumber(course.getCourseNumber()+10);
+       course.setCourseNum(course.getCourseNum()+10);
        System.out.println(student);
        System.out.println(course);
        course = new Course("CSE", 102, "Computer Programming 2", "Introduction to OOP", 4);
        student.passCourse(course);
-       course.setCourseNumber(course.getCourseNumber()-10);
+       course.setCourseNum(course.getCourseNum()-10);
        System.out.println(course);
        System.out.println(student);
 
@@ -59,32 +60,91 @@ class Course{
     private int AKTS; //must be positive
 
     //Constructor Method
-    public Course(String depCode, int courseNumber, String title, String description, int AKTS) {
+    Course(String depCode, int courseNumber, String title, String description, int AKTS) {
         this.depCode = depCode;
         this.courseNum = courseNumber;
         this.title = title;
         this.description = description;
         this.AKTS = AKTS;
+    }
+    public String getDepCode() {
+        return depCode;
+    }
+    public void setDepCode(String depCode) throws Exception {
         
+
+        if(validDepCode(depCode)){this.depCode = depCode;}
+        else{ throw new Exception("Error! Invalid Department Name"); }
     }
 
-    String getDepartmentCode(){return depCode;}
-    void setDepartmentCode(String departmentCode){this.depCode = departmentCode;}
+    public boolean validDepCode(String dep){
+        int l = dep.length();
 
-    int getCourseNumber(){return courseNum;}
-    void setCourseNumber(int number){this.courseNum=number;}
+        if(l==3 || l==4){return true;}
+        else{return false;}
 
-    String getTitle(){return title;}
-    void setTitle(String title){this.title=title;}
+    }
+    
+    public int getCourseNum() {
+        return courseNum;
+    }
+     
+    public void setCourseNum(int courseNum) throws Exception {
+       
+        if (!validCourseNum(courseNum)) throw new Exception("Error! Invalid Number");
+        else  this.courseNum = courseNum;
+    }
+ 
+    public boolean validCourseNum(int courseNum){
+        int c = courseNum;
+        if(c>=100&&c<=999|| c>=5000 &&c<=5999 || c>= 7000 && c<=7999  ) return true;
 
-    String getDescription(){return description;}
-    void setDescription(String description){this.description=description;}
+        else return false;
 
-    int getAKTS(){return AKTS;}
-    void setAKTS(int AKTS){this.AKTS=AKTS;}
 
-    String courseCode(){return depCode + courseNum;}
 
+    }
+
+
+    public String getTitle() {
+        return title;
+    }
+    
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getAKTS() {
+        return AKTS;
+    }
+
+    public void setAKTS(int aKTS) throws Exception {
+        
+        if(validAKTS(aKTS))
+        AKTS = aKTS;
+
+        else  throw new Exception("Error! AKTS must be positive");
+
+    }
+
+    public boolean validAKTS(int AKTS){
+
+        return AKTS>0;
+    }
+
+
+    public String courseCode(){return depCode + courseNum;}
+
+
+    @Override
     public String toString() {
         return courseCode() + " - " + title + " (" + AKTS + ")";
     }
@@ -92,6 +152,8 @@ class Course{
 
 }
 //Person class
+
+
 class Person{
 
     private String name;
@@ -99,7 +161,7 @@ class Person{
     private long ID;
     private String departmentCode;//Must be 3 or 4 characters 
 
-    public Person(String name, String email, long ID, String departmentCode) {
+    Person(String name, String email, long ID, String departmentCode) {
         this.name = name;
         this.email = email;
         this.ID = ID;
@@ -121,7 +183,15 @@ class Person{
 
     public void setEmail(String email) {
         this.email = email;
+
+
     }
+
+    public boolean validEmail(String email){
+        if(email.contains("@")&& email.contains(email)) return true;
+        else return false;
+    }
+
 
     public long getID() {
         return ID;
@@ -139,6 +209,7 @@ class Person{
         this.departmentCode = departmentCode;
     }
 
+    @Override
     public String toString() {
         return name + " (" + ID + ") - " + email;
     }
@@ -151,8 +222,8 @@ class Person{
 class Teacher extends Person{
     private int rank;
 
-    public Teacher(String name, String email, long ID, String departmentCode, int rank) {
-        super(name, email, ID, departmentCode); //efekurucay24
+    Teacher(String name, String email, long ID, String departmentCode, int rank) {
+        super(name, email, ID, departmentCode); 
         this.rank = rank;
     }
 
