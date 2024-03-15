@@ -33,13 +33,13 @@ public class Assignment01_20220808005 {
 
        System.out.println("---------");
 
-       Course course = new Course("CSE", 101, "Computer Programming 1", "Introduction to Programming", -6);
+       Course course = new Course("CSE", 101, "Computer Programming 1", "Introduction to Programming",6);
        Student student = new Student("Yahya Efe", "yahya@efekurucay.com",123L, "CSE");
        student.passCourse(course);
        course.setCourseNum(course.getCourseNum()+10);
        System.out.println(student);
        System.out.println(course);
-       course = new Course("CSE", 102, "Computer Programming 2", "Introduction to OOP", -4);
+       course = new Course("CSE", 102, "Computer Programming 2", "Introduction to OOP", 4);
        student.passCourse(course);
        course.setCourseNum(course.getCourseNum()/*-10 */);
        System.out.println(course);
@@ -171,7 +171,7 @@ class Person{
 
     Person(String name, String email, long ID, String departmentCode) throws Exception {
         if(!validEmail(email))throw new IllegalArgumentException("ERROR: Invalid Email Address");
-        if(Course.validDepCode(departmentCode))throw new IllegalArgumentException("ERROR: Invalid department code");
+        if(!Course.validDepCode(departmentCode))throw new IllegalArgumentException("ERROR: Invalid department code");
 
     
         this.name = name;
