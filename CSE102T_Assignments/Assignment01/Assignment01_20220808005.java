@@ -1,4 +1,3 @@
-import java.security.GeneralSecurityException;
 
 /**---------------------------------------------------
 
@@ -17,7 +16,7 @@ import java.security.GeneralSecurityException;
 *---------------------------------------------------*/
 
 public class Assignment01_20220808005 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
        Course c = new Course("CSE", 102, "Programming 2", "Introduction to OOP", 6);
        System.out.println(c.courseCode()+" - "+c.getTitle());
        System.out.println(c);
@@ -51,7 +50,7 @@ public class Assignment01_20220808005 {
 }//class Assignment01
 
 
-
+//Course class
 class Course{
     private String depCode; //Must be 3 or 4 characters
     private int courseNum; //Must be in the range 100-999 or 5000-5999 or 7000-7999 
@@ -77,7 +76,7 @@ class Course{
         else{ throw new Exception("Error! Invalid Department Name"); }
     }
 
-    public boolean validDepCode(String dep){
+    public static boolean validDepCode(String dep){
         int l = dep.length();
 
         if(l==3 || l==4){return true;}
@@ -91,8 +90,10 @@ class Course{
      
     public void setCourseNum(int courseNum) throws Exception {
        
-        if (!validCourseNum(courseNum)) throw new Exception("Error! Invalid Number");
-        else  this.courseNum = courseNum;
+        if (validCourseNum(courseNum)) 
+        this.courseNum = courseNum;
+        else  
+        throw new Exception("ERROR: Invalid Number");
     }
  
     public boolean validCourseNum(int courseNum){
@@ -151,9 +152,8 @@ class Course{
 
 
 }
+
 //Person class
-
-
 class Person{
 
     private String name;
@@ -181,12 +181,14 @@ class Person{
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String email) throws Exception {
+        if(validEmail(email))
         this.email = email;
 
-
+        else throw new Exception("ERROR: Invalid Email Adress");
     }
 
+/*****************************BAKILACAK**************************** */
     public boolean validEmail(String email){
         if(email.contains("@")&& email.contains(email)) return true;
         else return false;
@@ -205,9 +207,14 @@ class Person{
         return departmentCode;
     }
 
-    public void setDepartmentCode(String departmentCode) {
+    public void setDepartmentCode(String departmentCode) throws Exception {
+
+        if(Course.validDepCode(departmentCode))
         this.departmentCode = departmentCode;
+        else throw new Exception("ERROR: Invalid department code");
+    
     }
+ 
 
     @Override
     public String toString() {
@@ -222,8 +229,8 @@ class Person{
 class Teacher extends Person{
     private int rank;
 
-    Teacher(String name, String email, long ID, String departmentCode, int rank) {
-        super(name, email, ID, departmentCode); 
+    Teacher(String name, String email, long number, String departmentCode, int rank) {
+        super(name, email, number, departmentCode); 
         this.rank = rank;
     }
 
@@ -231,7 +238,7 @@ class Teacher extends Person{
         if (rank >= 1 && rank <= 4) {
             this.rank = rank;
         } else {
-            throw new IllegalArgumentException("Invalid rank value.");
+            throw new IllegalArgumentException("ERROR: Invalid rank value.");
         }
     }
 
@@ -262,18 +269,18 @@ class Teacher extends Person{
         }
     }
 
+    @Override
     public String toString() {
-        return getTitle() + " - " + super.toString();
+        return getTitle() + " " + super.toString();
     }
 }//Teacher class 
-
 
 //Student class 
 class Student extends Person{
     private int AKTS;
 
-    public Student(String name, String email, long ID, String departmentCode) {
-        super(name, email, ID, departmentCode);
+    public Student(String name, String email, long number, String departmentCode) {
+        super(name, email, number, departmentCode);
         this.AKTS = 0;
     }
 
@@ -284,6 +291,14 @@ class Student extends Person{
     public void passCourse(Course course) {
         AKTS += course.getAKTS();
     }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return super.toString();
+    }
+
+
 }//Student class 
 
 
@@ -293,8 +308,8 @@ class GradStudent extends Student{
     private int rank;
     private String thesisTopic;
 
-    public GradStudent(String name, String email, long ID, String departmentCode, int rank, String thesisTopic) {
-        super(name, email, ID, departmentCode);
+    public GradStudent(String name, String email, long number, String departmentCode, int rank, String thesisTopic) {
+        super(name, email, number, departmentCode);
         this.rank = rank;
         this.thesisTopic = thesisTopic;
     }
@@ -303,7 +318,7 @@ class GradStudent extends Student{
         if (rank == 1 || rank == 2 || rank == 3) {
             this.rank = rank;
         } else {
-            throw new IllegalArgumentException("Invalid rank value.");
+            throw new IllegalArgumentException("ERROR: Invalid rank value.");
         }
     }
 
@@ -328,8 +343,10 @@ class GradStudent extends Student{
         this.thesisTopic = thesisTopic;
     }
 
+    @Override
     public String toString() {
-        return getLevel() + " - " + super.toString();
+        // TODO Auto-generated method stub
+        return super.toString();
     }
 
 }//GradStudent class 
