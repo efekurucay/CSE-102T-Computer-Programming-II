@@ -1,4 +1,5 @@
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 /**---------------------------------------------------
 
  * Akdeniz University CSE102T Assignments
@@ -32,15 +33,15 @@ public class Assignment01_20220808005 {
 
        System.out.println("---------");
 
-       Course course = new Course("CSE", 101, "Computer Programming 1", "Introduction to Programming", 6);
+       Course course = new Course("CSE", 101, "Computer Programming 1", "Introduction to Programming", -6);
        Student student = new Student("Yahya Efe", "yahya@efekurucay.com",123L, "CSE");
        student.passCourse(course);
        course.setCourseNum(course.getCourseNum()+10);
        System.out.println(student);
        System.out.println(course);
-       course = new Course("CSE", 102, "Computer Programming 2", "Introduction to OOP", 4);
+       course = new Course("CSE", 102, "Computer Programming 2", "Introduction to OOP", -4);
        student.passCourse(course);
-       course.setCourseNum(course.getCourseNum()-10);
+       course.setCourseNum(course.getCourseNum()/*-10 */);
        System.out.println(course);
        System.out.println(student);
 
@@ -59,12 +60,19 @@ class Course{
     private int AKTS; //must be positive
 
     //Constructor Method
-    Course(String depCode, int courseNumber, String title, String description, int AKTS) {
+    Course(String depCode, int courseNumber, String title, String description, int AKTS) throws Exception {
+
+        if(!validAKTS(AKTS))throw new Exception("ERROR: AKTS must be positive");
+        if(!validCourseNum(courseNumber))throw new Exception("ERROR: Invalid Course Number");
+        if(!validDepCode(depCode))throw new Exception("ERROR: Invalid Department Name");
+
         this.depCode = depCode;
         this.courseNum = courseNumber;
         this.title = title;
         this.description = description;
         this.AKTS = AKTS;
+
+        
     }
     public String getDepCode() {
         return depCode;
@@ -73,7 +81,7 @@ class Course{
         
 
         if(validDepCode(depCode)){this.depCode = depCode;}
-        else{ throw new Exception("Error! Invalid Department Name"); }
+        else{ throw new Exception("ERROR: Invalid Department Name"); }
     }
 
     public static boolean validDepCode(String dep){
@@ -93,7 +101,7 @@ class Course{
         if (validCourseNum(courseNum)) 
         this.courseNum = courseNum;
         else  
-        throw new Exception("ERROR: Invalid Number");
+        throw new Exception("ERROR: Invalid Course Number");
     }
  
     public boolean validCourseNum(int courseNum){
@@ -132,7 +140,7 @@ class Course{
         if(validAKTS(aKTS))
         AKTS = aKTS;
 
-        else  throw new Exception("Error! AKTS must be positive");
+        else throw new Exception("ERROR: AKTS must be positive");
 
     }
 
@@ -161,7 +169,11 @@ class Person{
     private long ID;
     private String departmentCode;//Must be 3 or 4 characters 
 
-    Person(String name, String email, long ID, String departmentCode) {
+    Person(String name, String email, long ID, String departmentCode) throws Exception {
+        if(!validEmail(email))throw new IllegalArgumentException("ERROR: Invalid Email Address");
+        if(Course.validDepCode(departmentCode))throw new IllegalArgumentException("ERROR: Invalid department code");
+
+    
         this.name = name;
         this.email = email;
         this.ID = ID;
@@ -182,17 +194,21 @@ class Person{
     }
 
     public void setEmail(String email) throws Exception {
-        if(validEmail(email))
-        this.email = email;
-
-        else throw new Exception("ERROR: Invalid Email Adress");
+        if (validEmail(email))
+            this.email = email;
+        else
+            throw new IllegalArgumentException("ERROR: Invalid Email Address");
     }
 
 /*****************************BAKILACAK**************************** */
-    public boolean validEmail(String email){
-        if(email.contains("@")&& email.contains(email)) return true;
-        else return false;
-    }
+   
+
+public boolean validEmail(String email) {
+    String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(email);
+    return matcher.matches();
+}
 
 
     public long getID() {
@@ -229,16 +245,28 @@ class Person{
 class Teacher extends Person{
     private int rank;
 
-    Teacher(String name, String email, long number, String departmentCode, int rank) {
-        super(name, email, number, departmentCode); 
+    Teacher(String name, String email, long number, String departmentCode, int rank) throws Exception {
+        super(name, email, number, departmentCode);
+        if (!validRank(rank))throw new IllegalArgumentException("ERROR: Invalid rank value."); 
+          
+         
         this.rank = rank;
     }
 
     public void setRank(int rank) {
-        if (rank >= 1 && rank <= 4) {
+        if (validRank(rank)) {
             this.rank = rank;
         } else {
             throw new IllegalArgumentException("ERROR: Invalid rank value.");
+        }
+    }
+
+    public boolean validRank(int rank){
+
+        if (rank >= 1 && rank <= 4) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -279,7 +307,7 @@ class Teacher extends Person{
 class Student extends Person{
     private int AKTS;
 
-    public Student(String name, String email, long number, String departmentCode) {
+    public Student(String name, String email, long number, String departmentCode) throws Exception {
         super(name, email, number, departmentCode);
         this.AKTS = 0;
     }
@@ -294,7 +322,7 @@ class Student extends Person{
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
+        // 
         return super.toString();
     }
 
@@ -308,18 +336,28 @@ class GradStudent extends Student{
     private int rank;
     private String thesisTopic;
 
-    public GradStudent(String name, String email, long number, String departmentCode, int rank, String thesisTopic) {
+    public GradStudent(String name, String email, long number, String departmentCode, int rank, String thesisTopic) throws Exception {
         super(name, email, number, departmentCode);
+        if(!validRank(rank)) throw new IllegalArgumentException("ERROR: Invalid rank value.");
         this.rank = rank;
         this.thesisTopic = thesisTopic;
     }
 
     public void setRank(int rank) {
-        if (rank == 1 || rank == 2 || rank == 3) {
+        if (validRank(rank)) {
             this.rank = rank;
         } else {
             throw new IllegalArgumentException("ERROR: Invalid rank value.");
         }
+    }
+
+    public boolean validRank(int rank){
+        if (rank == 1 || rank == 2 || rank == 3) {
+            return true;
+        } else {
+           return false;
+        }
+
     }
 
     public String getLevel() {
@@ -345,7 +383,7 @@ class GradStudent extends Student{
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
+        
         return super.toString();
     }
 
