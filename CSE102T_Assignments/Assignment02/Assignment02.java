@@ -1,5 +1,3 @@
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 /**---------------------------------------------------
 
  * Akdeniz University CSE102T Assignments
@@ -15,6 +13,10 @@ import java.util.regex.Pattern;
  * Website: https://efekurucay.com
 
 *---------------------------------------------------*/
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /***
  *    ███████╗███████╗███████╗
  *    ██╔════╝██╔════╝██╔════╝
@@ -24,44 +26,45 @@ import java.util.regex.Pattern;
  *    ╚══════╝╚═╝     ╚══════╝
  *                            
  */
+public class Assignment02 {
 
-public class Assignment01_20220808005 {
-    public static void main(String[] args) throws Exception {
-       Course c = new Course("CSE", 102, "Programming 2", "Introduction to OOP", 6);
-       System.out.println(c.courseCode()+" - "+c.getTitle());
-       System.out.println(c);
+    
+}
 
-       Teacher t = new Teacher("Joseph LEDET","josephledet@akdeniz.edu.tr",123L,"CSE",1);
-       System.out.println(t);
+class Department {
+    String Code;//1. Must be 3 or 4 characters 
+    String Name;
+    Teacher Chair;//1. Throws DepartmentMismatchException if Teacher is not in this department
 
-       Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, "CSE");
-       System.out.println(s);
+Department(String code, String name){}
 
-       s.passCourse(c);
-       System.out.println(s.getAKTS());
+public String getCode() {
+    return Code;
+}
+public void setCode(String code) {
+    Code = code;
+}
+public String getName() {
+    return Name;
+}
+public void setName(String name) {
+    Name = name;
+}
+public Teacher getChair() {
+    return Chair;
+}
+public void setChair(Teacher chair) {
+    Chair = chair;
+}
 
-       System.out.println("---------");
-
-       Course course = new Course("CSE", 101, "Computer Programming 1", "Introduction to Programming",6);
-       Student student = new Student("Yahya Efe", "yahya@efekurucay.com",123L, "CSE");
-       student.passCourse(course);
-       course.setCourseNum(course.getCourseNum()+10);
-       System.out.println(student);
-       System.out.println(course);
-       course = new Course("CSE", 102, "Computer Programming 2", "Introduction to OOP", 4);
-       student.passCourse(course);
-       course.setCourseNum(course.getCourseNum()/*-10 */);
-       System.out.println(course);
-       System.out.println(student);
-
-
-
-    }
-}//class Assignment01
+}
+class Course {
 
 
-//Course class
-class Course{
+
+
+    Department Department; // (replaces Department Code)
+    Teacher Teacher;
     private String depCode; //Must be 3 or 4 characters
     private int courseNum; //Must be in the range 100-999 or 5000-5999 or 7000-7999 
     private String title;
@@ -69,12 +72,12 @@ class Course{
     private int AKTS; //must be positive
 
     //Constructor Method
-    Course(String depCode, int courseNumber, String title, String description, int AKTS) throws Exception {
+    Course(String depCode, int courseNumber, String title, String description, int AKTS,Teacher teacher) throws Exception {
 
         if(!validAKTS(AKTS))throw new Exception("ERROR: AKTS must be positive");
         if(!validCourseNum(courseNumber))throw new Exception("ERROR: Invalid Course Number");
         if(!validDepCode(depCode))throw new Exception("ERROR: Invalid Department Name");
-
+        //if()throw new DepartmentMismatchException
         this.depCode = depCode;
         this.courseNum = courseNumber;
         this.title = title;
@@ -83,6 +86,19 @@ class Course{
 
         
     }
+    public Department getDepartment() {
+        return Department;
+    }
+    public void setDepartment(Department department) {
+        Department = department;
+    }
+    public Teacher getTeacher() {
+        return Teacher;
+    }
+    public void setTeacher(Teacher teacher) {
+        Teacher = teacher;
+    }
+    
     public String getDepCode() {
         return depCode;
     }
@@ -170,10 +186,13 @@ class Course{
 
 }
 
-//Person class
-class Person{
 
+abstract class Person{
+
+
+    Department Department;
     private String name;
+
     private String email;//Must be of the form {username}@{university name}.{domain} 
     private long ID;
     private String departmentCode;//Must be 3 or 4 characters 
@@ -187,6 +206,14 @@ class Person{
         this.email = email;
         this.ID = ID;
         this.departmentCode = departmentCode;
+    }
+
+    public Department getDepartment() {
+        return Department;
+    }
+
+    public void setDepartment(Department department) {
+        Department = department;
     }
 
 
@@ -245,12 +272,8 @@ public boolean validEmail(String email) {
     public String toString() {
         return name + " (" + ID + ") - " + email;
     }
+}
 
-
-}//Person class
-
-
-//Teacher class 
 class Teacher extends Person{
     private int rank;
 
@@ -310,117 +333,25 @@ class Teacher extends Person{
     public String toString() {
         return getTitle() + " " + super.toString();
     }
-}//Teacher class 
-
-//Student class 
-class Student extends Person{
-    private int AKTS;
-
-    public Student(String name, String email, long number, String departmentCode) throws Exception {
-        super(name, email, number, departmentCode);
-        this.AKTS = 0;
-    }
-
-    public int getAKTS() {
-        return AKTS;
-    }
-
-    public void passCourse(Course course) {
-        AKTS += course.getAKTS();
-    }
-
-    @Override
-    public String toString() {
-        // 
-        return super.toString();
-    }
+}
 
 
-}//Student class 
 
 
-//GradStudent class
-class GradStudent extends Student{
-
-    private int rank;
-    private String thesisTopic;
-
-    public GradStudent(String name, String email, long number, String departmentCode, int rank, String thesisTopic) throws Exception {
-        super(name, email, number, departmentCode);
-        if(!validRank(rank)) throw new IllegalArgumentException("ERROR: Invalid rank value.");
-        this.rank = rank;
-        this.thesisTopic = thesisTopic;
-    }
-
-    public void setRank(int rank) {
-        if (validRank(rank)) {
-            this.rank = rank;
-        } else {
-            throw new IllegalArgumentException("ERROR: Invalid rank value.");
-        }
-    }
-
-    public boolean validRank(int rank){
-        if (rank == 1 || rank == 2 || rank == 3) {
-            return true;
-        } else {
-           return false;
-        }
-
-    }
-
-    public String getLevel() {
-        switch (rank) {
-            case 1:
-                return "Master's Student";
-            case 2:
-                return "Doctoral Student";
-            case 3:
-                return "Doctoral Candidate";
-            default:
-                return "";
-        }
-    }
-
-    public String getThesisTopic() {
-        return thesisTopic;
-    }
-
-    public void setThesisTopic(String thesisTopic) {
-        this.thesisTopic = thesisTopic;
-    }
-
-    @Override
-    public String toString() {
-        
-        return super.toString();
-    }
-
-}//GradStudent class 
 
 
-/***
- *              _____                    _____                    _____          
- *             /\    \                  /\    \                  /\    \         
- *            /::\    \                /::\    \                /::\    \        
- *           /::::\    \              /::::\    \              /::::\    \       
- *          /::::::\    \            /::::::\    \            /::::::\    \      
- *         /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \     
- *        /:::/__\:::\    \        /:::/__\:::\    \        /:::/__\:::\    \    
- *       /::::\   \:::\    \      /::::\   \:::\    \      /::::\   \:::\    \   
- *      /::::::\   \:::\    \    /::::::\   \:::\    \    /::::::\   \:::\    \  
- *     /:::/\:::\   \:::\    \  /:::/\:::\   \:::\    \  /:::/\:::\   \:::\    \ 
- *    /:::/__\:::\   \:::\____\/:::/  \:::\   \:::\____\/:::/__\:::\   \:::\____\
- *    \:::\   \:::\   \::/    /\::/    \:::\   \::/    /\:::\   \:::\   \::/    /
- *     \:::\   \:::\   \/____/  \/____/ \:::\   \/____/  \:::\   \:::\   \/____/ 
- *      \:::\   \:::\    \               \:::\    \       \:::\   \:::\    \     
- *       \:::\   \:::\____\               \:::\____\       \:::\   \:::\____\    
- *        \:::\   \::/    /                \::/    /        \:::\   \::/    /    
- *         \:::\   \/____/                  \/____/          \:::\   \/____/     
- *          \:::\    \                                        \:::\    \         
- *           \:::\____\                                        \:::\____\        
- *            \::/    /                                         \::/    /        
- *             \/____/                                           \/____/         
- *                                                                               
- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
