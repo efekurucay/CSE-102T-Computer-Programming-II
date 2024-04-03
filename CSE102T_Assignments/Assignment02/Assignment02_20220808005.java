@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  *    ╚══════╝╚═╝     ╚══════╝
  *                            
  */
-public class Assignment02 {
+public class Assignment02_20220808005 {
 
     
 }
