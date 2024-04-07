@@ -1,10 +1,11 @@
+import java.util.ArrayList;
 /**---------------------------------------------------
 
  * Akdeniz University CSE102T Assignments
 
  * @author: Yahya Efe Kuruçay
 
- * @since: 03.04.2024
+ * @since: 07.04.2024
 
  * Description: Assignment02
 
@@ -14,136 +15,166 @@
 
 *---------------------------------------------------*/
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-/***
- *    ███████╗███████╗███████╗
- *    ██╔════╝██╔════╝██╔════╝
- *    █████╗  █████╗  █████╗  
- *    ██╔══╝  ██╔══╝  ██╔══╝  
- *    ███████╗██║     ███████╗
- *    ╚══════╝╚═╝     ╚══════╝
- *                            
+/*
+ *            __     _                                                          
+ *           / _|   | |                                                         
+ *       ___| |_ ___| | ___   _ _ __ _   _  ___ __ _ _   _   ___ ___  _ __ ___  
+ *      / _ \  _/ _ \ |/ / | | | '__| | | |/ __/ _` | | | | / __/ _ \| '_ ` _ \ 
+ *     |  __/ ||  __/   <| |_| | |  | |_| | (_| (_| | |_| || (_| (_) | | | | | |
+ *      \___|_| \___|_|\_\\__,_|_|   \__,_|\___\__,_|\__, (_)___\___/|_| |_| |_|
+ *                                                    __/ |                     
+ *                                                   |___/                      
  */
+
 public class Assignment02_20220808005 {
 
-    
-}
+    public static void main(String[] args) {
+        Department cse = new Department("CSE", "Computer Science Engineering");
+        Department cse2 = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, cse, 1);
+        Course c101 = new Course(cse, 101, "Programing 1", "İntro to Programing", 6, t);
+        Course c102 = new Course(cse2, 102, "Programing 2", "OOP", 4, t);
+        Student s = new Student("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse);
+        s.addCourse(c101, 70);
+        s.addCourse(c102, 50);
+        System.out.println(s.getAKTS());
+        System.out.println(s.getAttemptedAKTS());
+        System.out.println(s.getGPA());
+        System.out.println(s);
+        s = new GradStudent("Yahya Efe", "me@efekurucay.com", 456L, cse,2, "MDE");
+        s.addCourse(c101, 70);
+        s.addCourse(c102, 50);
+        System.out.println(s.getAKTS());
+        System.out.println(s.getAttemptedAKTS());
+        System.out.println(s.getGPA());
+        System.out.println(s);
 
-class Department {
-    String Code;//1. Must be 3 or 4 characters 
-    String Name;
-    Teacher Chair;//1. Throws DepartmentMismatchException if Teacher is not in this department
+        cse.setChair(t);
+        Department math = new Department("MATH", "Mathematics");
+        System.out.println(cse.getCode() + " C = " + cse.getChair());
+        t.setDepartment(math);
+        System.out.println(cse.getCode() + " C = " + cse.getChair());
+        t.setDepartment(cse);
+        System.out.println(cse.getCode() + " C = " + cse.getChair());
 
-Department(String code, String name){}
-
-public String getCode() {
-    return Code;
+    }
 }
-public void setCode(String code) {
-    Code = code;
+class Department{
+    private String code;
+    private String name;
+    private Teacher chair;
+    Department(String code, String name){
+       setCode(code);
+        this.name = name;
+    }
+    public String getCode() {
+        return code;
+    }
+    public void setCode(String code) {
+        if(code.length() == 3 || code.length() == 4)
+            this.code = code;
+        else{
+            throw new InvalidCodeException(code);
+        }    
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public Teacher getChair() {
+        if(chair == null)
+            return null;
+        if(chair.getDepartment()==this)
+            return chair;    
+        else
+            throw new DepartmantMismatchException(chair.getDepartment(), chair);   
+    }
+    public void setChair(Teacher chair) {
+        if (this.chair == null) {
+            this.chair = chair;
+        } else if (chair == null && chair == null) {
+            this.chair = null;
+        } else {
+            throw new DepartmantMismatchException(chair.getDepartment(), chair);
+        }
+    }
 }
-public String getName() {
-    return Name;
-}
-public void setName(String name) {
-    Name = name;
-}
-public Teacher getChair() {
-    return Chair;
-}
-public void setChair(Teacher chair) {
-    Chair = chair;
-}
-
-}
-class Course {
-
-
-
-
-    Department Department; // (replaces Department Code)
-    Teacher Teacher;
-    private String depCode; //Must be 3 or 4 characters
-    private int courseNum; //Must be in the range 100-999 or 5000-5999 or 7000-7999 
+class Course{
+    private Department department;
+    private Teacher teacher;
+    private int courseNumber; 
     private String title;
     private String description;
-    private int AKTS; //must be positive
+    private int AKTS; 
 
-    //Constructor Method
-    Course(String depCode, int courseNumber, String title, String description, int AKTS,Teacher teacher) throws Exception {
-
-        if(!validAKTS(AKTS))throw new Exception("ERROR: AKTS must be positive");
-        if(!validCourseNum(courseNumber))throw new Exception("ERROR: Invalid Course Number");
-        if(!validDepCode(depCode))throw new Exception("ERROR: Invalid Department Name");
-        //if()throw new DepartmentMismatchException
-        this.depCode = depCode;
-        this.courseNum = courseNumber;
-        this.title = title;
-        this.description = description;
-        this.AKTS = AKTS;
-
+    public Course(Department department,int courseNumber,String title,String description,int AKTS,Teacher teacher){
+        setDepartment(department);
+        setCourseNumber(courseNumber);
+        setTitle(title);
+        setDescription(description);
+        setAKTS(AKTS);
+        setTeacher(teacher);
+        if(this.department != teacher.getDepartment())
+            throw new DepartmantMismatchException(department, teacher);
         
-    }
-    public Department getDepartment() {
-        return Department;
+
     }
     public void setDepartment(Department department) {
-        Department = department;
+        this.department = department;
     }
-    public Teacher getTeacher() {
-        return Teacher;
+    public Department getDepartment() {
+        return department;
     }
     public void setTeacher(Teacher teacher) {
-        Teacher = teacher;
-    }
+        if(teacher.getDepartment() == department)
+            this.teacher = teacher;
+        else 
+            throw new DepartmantMismatchException(department, teacher);    
+    }    
     
-    public String getDepCode() {
-        return depCode;
+    public Teacher getTeacher() {
+        if(teacher.getDepartment() == department)
+            return teacher;
+        else 
+            throw new DepartmantMismatchException(department, teacher);    
     }
-    public void setDepCode(String depCode) throws Exception {
-        
-
-        if(validDepCode(depCode)){this.depCode = depCode;}
-        else{ throw new Exception("ERROR: Invalid Department Name"); }
+    @Override
+    public String toString() {
+        return courseCode() +" - "+title + " ("+AKTS+")";
     }
-
-    public static boolean validDepCode(String dep){
-        int l = dep.length();
-
-        if(l==3 || l==4){return true;}
-        else{return false;}
-
-    }
-    
-    public int getCourseNum() {
-        return courseNum;
-    }
-     
-    public void setCourseNum(int courseNum) throws Exception {
-       
-        if (validCourseNum(courseNum)) 
-        this.courseNum = courseNum;
-        else  
-        throw new Exception("ERROR: Invalid Course Number");
-    }
- 
-    public boolean validCourseNum(int courseNum){
-        int c = courseNum;
-        if(c>=100&&c<=999|| c>=5000 &&c<=5999 || c>= 7000 && c<=7999  ) return true;
-
-        else return false;
-
-
-
+    public String courseCode(){
+        return department.getCode()+courseNumber;
     }
 
+    public int getCourseNumber() {
+        return courseNumber;
+    }
+
+    public void setCourseNumber(int courseNumber) {
+        if(isCourseNumberValid(courseNumber))
+            this.courseNumber = courseNumber;
+        else  {
+            throw new InvalidValueEntered(courseNumber, "Person", "courseNumber", "must be 100-99 or 5000-5999 or 7000-7999");
+        }         
+    }
+    public boolean isCourseNumberValid(int courseNumber){
+        // must be in range 100-999,5000-5999,7000-7999
+        if(courseNumber >= 100 && courseNumber <= 999)
+            return true;
+        else if(courseNumber >=5000 && courseNumber <= 5999)
+            return true;
+        else if(courseNumber >= 7000 && courseNumber <= 7999 )
+            return true;
+        else 
+            return false;           
+    }
 
     public String getTitle() {
         return title;
     }
-    
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -160,198 +191,435 @@ class Course {
         return AKTS;
     }
 
-    public void setAKTS(int aKTS) throws Exception {
-        
-        if(validAKTS(aKTS))
-        AKTS = aKTS;
-
-        else throw new Exception("ERROR: AKTS must be positive");
-
+    public void setAKTS(int AKTS) {
+        // must be possitive
+        if(AKTS > 0)
+            this.AKTS = AKTS;
+        else{ 
+            throw new InvalidValueEntered(AKTS,"Course","AKTS","Must be possitive");
+        }      
     }
-
-    public boolean validAKTS(int AKTS){
-
-        return AKTS>0;
-    }
-
-
-    public String courseCode(){return depCode + courseNum;}
-
-
-    @Override
-    public String toString() {
-        return courseCode() + " - " + title + " (" + AKTS + ")";
-    }
-
 
 }
-
-
 abstract class Person{
-
-
-    Department Department;
+    private Department department;
     private String name;
-
-    private String email;//Must be of the form {username}@{university name}.{domain} 
-    private long ID;
-    private String departmentCode;//Must be 3 or 4 characters 
-
-    Person(String name, String email, long ID, String departmentCode) throws Exception {
-        if(!validEmail(email))throw new IllegalArgumentException("ERROR: Invalid Email Address");
-        if(!Course.validDepCode(departmentCode))throw new IllegalArgumentException("ERROR: Invalid department code");
-
-    
-        this.name = name;
-        this.email = email;
-        this.ID = ID;
-        this.departmentCode = departmentCode;
+    private String email; 
+    private long id;
+    public Person(String name, String email, long id, Department department) {
+        setName(name);
+        setEmail(email);
+        setId(id);
+        setDepartment(department);
+        
     }
-
     public Department getDepartment() {
-        return Department;
+        return department;
     }
-
     public void setDepartment(Department department) {
-        Department = department;
+        this.department = department;
     }
-
-
+    @Override
+    public String toString() {
+        return name+ " "+" ("+ id+")" +" - "+ email;
+    }
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getEmail() {
         return email;
     }
-
-    public void setEmail(String email) throws Exception {
-        if (validEmail(email))
+    public void setEmail(String email) {
+        // there is a certain form
+        if(isEmailValid(email))
             this.email = email;
+        else{
+            throw new InvalidValueEntered(email, "Person", "email", "must be format of xxx@gmail.com");
+        }    
+    }
+    public boolean isEmailValid(String email){
+        if(!email.contains("@"))
+            return false;
+        int indexOfat = email.indexOf("@");
+        if(email.substring(0, indexOfat).contains("."))
+            return false;
+        if(email.substring(indexOfat+1).contains("@"))
+            return false;
+        if(!email.contains("."))
+            return false;
         else
-            throw new IllegalArgumentException("ERROR: Invalid Email Address");
+            return true;
     }
-
-
-   
-
-public boolean validEmail(String email) {
-    String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-    Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher(email);
-    return matcher.matches();
-}
-
-
-    public long getID() {
-        return ID;
+    public long getId() {
+        return id;
     }
-
-    public void setID(long ID) {
-        this.ID = ID;
-    }
-
-    public String getDepartmentCode() {
-        return departmentCode;
-    }
-
-    public void setDepartmentCode(String departmentCode) throws Exception {
-
-        if(Course.validDepCode(departmentCode))
-        this.departmentCode = departmentCode;
-        else throw new Exception("ERROR: Invalid department code");
-    
-    }
- 
-
-    @Override
-    public String toString() {
-        return name + " (" + ID + ") - " + email;
+    public void setId(long id) {
+        this.id = id;
     }
 }
 
 class Teacher extends Person{
-    private int rank;
-
-    Teacher(String name, String email, long number, String departmentCode, int rank) throws Exception {
-        super(name, email, number, departmentCode);
-        if (!validRank(rank))throw new IllegalArgumentException("ERROR: Invalid rank value."); 
-          
-         
-        this.rank = rank;
-    }
-
-    public void setRank(int rank) {
-        if (validRank(rank)) {
+    int rank;
+    
+    public Teacher(String name, String email, long id, Department department,int rank){
+        super(name, email, id, department);
+        if(rank <= 5 && rank >= 1)
             this.rank = rank;
-        } else {
-            throw new IllegalArgumentException("ERROR: Invalid rank value.");
-        }
+        else    
+            throw new InvalidRankException(rank);
+
+
+            
     }
-
-    public boolean validRank(int rank){
-
-        if (rank >= 1 && rank <= 4) {
-            return true;
-        } else {
-            return false;
+    @Override
+    public void setDepartment(Department department) {
+        if(getDepartment() == null)
+            super.setDepartment(department);
+        else if(department.getChair() != getDepartment().getChair()){
+            getDepartment().setChair(null);;
+            department.setChair(this);
         }
+        else
+            department.setChair(null);   
     }
-
-    public String getTitle() {
-        switch (rank) {
+    
+    public String getTitle(){
+        switch(rank){
             case 1:
-                return "Lecturer";
+                return "Teaching Assistant";
             case 2:
-                return "Assistant Professor";
+                return "Lecturer";
             case 3:
-                return "Associate Professor";
+                return "Assistant Professor";
             case 4:
-                return "Professor";
+                return "Associate Professor";
             default:
-                return "";
+                return "Professor";    
         }
     }
-
-    public void promote() {
-        if (rank < 4) {
+    public void promote(){
+        if(rank +1 <= 4)
             rank++;
-        }
+        else{
+            throw new InvalidRankException(rank) ;
+        }    
     }
-
-    public void demote() {
-        if (rank > 1) {
+    public void demote(){
+        if(rank -1 >= 1)
             rank--;
-        }
+        else{
+            throw new InvalidRankException(rank);
+        }    
     }
-
     @Override
     public String toString() {
-        return getTitle() + " " + super.toString();
+        return super.toString();
+    }
+}
+class Student extends Person{
+    private int failedAKTS;
+    private int AKTS;
+    private ArrayList<Course> courses = new ArrayList<>();
+    private ArrayList<Double> grades = new ArrayList<>();
+
+    public Student(String name, String email, long id, Department department) {
+        super(name, email, id, department);
+    }
+    public ArrayList<Course> getCourses() {
+        return courses;
+    }
+    public ArrayList<Double> getGrades() {
+        return grades;
+    }
+
+    public int getAKTS() {
+        return AKTS;
+    }
+    public int getAttemptedAKTS(){
+        return AKTS+ failedAKTS;
+    }
+    public void addCourse(Course course, double grade){
+
+        if(grade < 100 && grade > 0){
+            if(grade > 45)
+                AKTS += course.getAKTS();
+            else
+                failedAKTS += course.getAKTS();     
+            if(!courses.contains(course)){
+                courses.add(course);
+                grades.add(grade);
+            }else{
+                courses.set(courses.indexOf(course),course);
+                grades.set(courses.indexOf(course),grade);
+            }
+        }
+        else{
+            throw new InvalidGradeException(grade);
+        }
+    }   
+    public double courseGPAPoints(Course course){
+        if(course== null)
+            throw new CourseNotFoundException();
+        else{
+            double point = grades.get(courses.indexOf(course));
+            if(point >87)
+                return 4.0;
+            else if(point >80)
+                return 3.5;    
+            else if(point >73)
+                return 3.0;    
+            else if(point >66)
+                return 2.5;      
+            else if(point >59)
+                return 2.0;   
+            else if(point >52)
+                return 1.5;   
+            else if(point >45)
+                return 1.0;
+            else if(point >34)
+                return 0.5;     
+            else                         
+                return 0.0;
+        }    
+    }
+    public double getGPA() {
+        if (courses.isEmpty()) {
+            return 0;
+        }
+        
+        double totalGPA= 0; 
+        int totalAKTS = 0;
+
+        for(int i = 0; i < courses.size(); i++){
+            totalGPA += courseGPAPoints(courses.get(i))*courses.get(i).getAKTS();
+            totalAKTS += courses.get(i).getAKTS();
+        }
+
+        return totalGPA / totalAKTS;
+    }
+    public String courseGradeLetter(Course course){
+        if(getGPA() >3.5){
+            return "AA";
+        }
+        else if(getGPA() >3.0){
+            return "BA";
+        }
+        else if(getGPA() >2.5){
+            return "BB";
+        }
+        else if(getGPA() >2.0){
+            return "CB";
+        }
+        else if(getGPA() >1.5){
+            return "CC";
+        }
+        else if(getGPA() >1.0){
+            return "DD";
+        }
+        else if(getGPA() >0.5){
+            return "FD";
+        }
+        else{
+            return "FF";
+        }
+    }
+    public String courseResult(Course course){
+        if(getGPA() > 1.5)
+            return "Passed";
+        else if(getGPA() > 0.5)
+            return "Conditionally Passed";
+        else
+            return "Failed";        
+    }
+    @Override
+    public String toString() {
+        return super.toString() +" -GPA:" + getGPA();
+    }
+
+
+
+}
+class GradStudent extends Student{
+    private int rank;
+    private String thesisTopic;
+    public GradStudent(String name, String email, long id, Department department,int rank , String thesisTopic) {
+        super(name, email, id, department);
+        setRank(rank);
+        this.thesisTopic = thesisTopic;
+    }
+    public void setRank(int rank) {
+        if(rank >= 1 && rank <= 3)
+            this.rank = rank;
+        else{
+            throw new InvalidRankException(rank);
+        }    
+    }
+
+    public String getLevel(){
+        switch(rank){
+            case 1: 
+                return "Master's Student";
+            case 2:
+                return "Doctoral Student";
+            default:
+                return "Doctoral Candidate";
+        }
+    }
+    public String getThesisTopic(){
+            return thesisTopic;
+    }
+    public void setThesisTopic(String thesisTopic) {
+        this.thesisTopic = thesisTopic;
+    }
+    @Override
+    public double courseGPAPoints(Course course) {
+        if(course== null)
+            throw new CourseNotFoundException();
+        else{
+            double point = getGrades().get(getCourses().indexOf(course));
+            if(point >89)
+                return 4.0;
+            else if(point >84)
+                return 3.5;    
+            else if(point >79)
+                return 3.0;    
+            else if(point >74)
+                return 2.5;      
+            else if(point >69)
+                return 2.0;    
+            else                         
+                return 0.0;
+        }    
+        
+    }
+    @Override
+    public double getGPA() {
+        return super.getGPA();
+    }
+    @Override
+    public String courseGradeLetter(Course course) {
+        double GPA = getGPA();
+        if(GPA>3.5)
+            return "AA";
+        else if(GPA > 3.0)
+            return "BA";   
+        else if(GPA > 2.5)
+            return "BB";
+        else if(GPA > 2.0)
+            return "CB";
+        else if(GPA > 0.0)
+            return "CC";
+        else     
+            return "FF";
+    }
+    @Override
+    public String courseResult(Course course) {
+        if(getGPA() >= 2.0)
+            return "Passed";
+        else 
+            return "Failed";    
+    }
+
+}
+class CourseNotFoundException extends RuntimeException{
+    private Course course;
+    private Student student;
+    @Override
+    public String toString() {
+        
+        return "CourseNotFoundException: " + student.getId() + " has not yet taken " + course.courseCode();
+    }
+}
+class DepartmantMismatchException extends RuntimeException{
+    private Department department;
+    private Teacher person;
+    private Course course;
+    DepartmantMismatchException(Course course,Teacher person){
+        this.course = course;
+        this.person = person;
+        department = null;
+    }
+    DepartmantMismatchException(Department department,Teacher person){
+        this.department = department;
+        this.person = person;
+        course = null;
+    }
+    @Override
+    public String toString() {
+        if(course == null){
+            return "DepartmentMismatchException: " + person.getName()+" ("+ person.getId()+") cannot be chair of " + department.getCode()+" because"+
+            " currently assigned to "+ person.getDepartment().getCode();
+        }
+        else{
+            return "DepartmentMismatchException: " + person.getName()+" ("+ person.getId()+") cannot teach " + course.courseCode()+" because"+
+            " currently assigned to "+ person.getDepartment();
+        }
+
+    }
+}
+class InvalidGradeException extends RuntimeException{
+    private double grade;
+    InvalidGradeException(double grade){
+        this.grade = grade;
+    }
+    @Override
+    public String toString() {
+        return "InvalidGradeException: " + grade;
+    }
+}
+class InvalidRankException extends RuntimeException{
+    private int rank;
+    InvalidRankException(int rank){
+        this.rank = rank;
+    }
+    @Override
+    public String toString() {
+        return "InvalidRankException: "+ rank;
+    }
+}
+class InvalidCodeException extends RuntimeException{
+    private String code;
+    InvalidCodeException(String code){
+        this.code = code;
+    }
+    @Override
+    public String toString() {
+        return "invalidCodeException: Department - code "+code+" (length must be 3 or 4)";
+    }
+}
+class InvalidValueEntered extends RuntimeException{
+    InvalidValueEntered(String value,String className, String valueName,String validValues){
+        System.out.println("invalidValueEntered: "+className + " - " +valueName+ " " +value+" (" + validValues+")");
+    }
+    InvalidValueEntered(int value,String className, String valueName,String validValues){
+        System.out.println("invalidValueEntered: "+className + " - " +valueName+ " " +value+" (" + validValues+")");
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/***
+ *              _____                    _____                    _____          
+ *             /\    \                  /\    \                  /\    \         
+ *            /::\    \                /::\    \                /::\    \        
+ *           /::::\    \              /::::\    \              /::::\    \       
+ *          /::::::\    \            /::::::\    \            /::::::\    \      
+ *         /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \     
+ *        /:::/__\:::\    \        /:::/__\:::\    \        /:::/__\:::\    \    
+ *       /::::\   \:::\    \      /::::\   \:::\    \      /::::\   \:::\    \   
+ *      /::::::\   \:::\    \    /::::::\   \:::\    \    /::::::\   \:::\    \  
+ *     /:::/\:::\   \:::\    \  /:::/\:::\   \:::\    \  /:::/\:::\   \:::\    \ 
+ *    /:::/__\:::\   \:::\____\/:::/  \:::\   \:::\____\/:::/__\:::\   \:::\____\
+ *    \:::\   \:::\   \::/    /\::/    \:::\   \::/    /\:::\   \:::\   \::/    /
+ *     \:::\   \:::\   \/____/  \/____/ \:::\   \/____/  \:::\   \:::\   \/____/ 
+ *      \:::\   \:::\    \               \:::\    \       \:::\   \:::\    \     
+ *       \:::\   \:::\____\               \:::\____\       \:::\   \:::\____\    
+ *        \:::\   \::/    /                \::/    /        \:::\   \::/    /    
+ *         \:::\   \/____/                  \/____/          \:::\   \/____/     
+ *          \:::\    \                                        \:::\    \         
+ *           \:::\____\                                        \:::\____\        
+ *            \::/    /                                         \::/    /        
+ *             \/____/                                           \/____/         
+ *                                                                               
+ */
