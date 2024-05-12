@@ -494,7 +494,7 @@ class Student extends Person{
 
 }
 class GradStudent extends Student{
-    private int rank;
+    int rank;
     private String thesisTopic;
     public GradStudent(String name, String email, long id, Department department,int rank , String thesisTopic) {
         super(name, email, id, department);
