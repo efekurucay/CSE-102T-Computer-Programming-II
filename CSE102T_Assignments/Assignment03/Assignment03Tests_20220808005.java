@@ -20,13 +20,13 @@ void shouldNotCreateDepartmentWithInvalidID() {
 void shouldNotCreateCourseWithDifferentDepartment() {
         Department cse = new Department("CSE", "Computer Science Engineering");
         Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-        Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+        Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
         
         try {
             new Course(eee, 101, "Physics", "Intro to Physics", 4, t);
             fail("Should have thrown DepartmentMismatchException");
         } catch (DepartmantMismatchException e) {
-            assertEquals("DepartmentMismatchException: John Doe (123) cannot teach EEE101 because currently assigned to CSE", e.toString());
+            assertEquals("DepartmentMismatchException: Yahya Efe Kuruçay (123) cannot teach EEE101 because currently assigned to CSE", e.toString());
         }
     }
     // │     ├─ departmentShouldNotSetChairDifferentDepartment ✘ Should have thrown DepartmentMismatchException
@@ -34,34 +34,34 @@ void shouldNotCreateCourseWithDifferentDepartment() {
 void departmentShouldNotSetChairDifferentDepartment() {
         Department cse = new Department("CSE", "Computer Science Engineering");
         Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-        Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+        Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
         
         try {
             eee.setChair(t);
             fail("Should have thrown DepartmentMismatchException");
         } catch (DepartmantMismatchException e) {
-            assertEquals("DepartmentMismatchException: John Doe (123) cannot be chair of EEE because currently assigned to CSE", e.toString());
+            assertEquals("DepartmentMismatchException: Yahya Efe Kuruçay (123) cannot be chair of EEE because currently assigned to CSE", e.toString());
         }
     }
     // │     ├─ DepartmentMismatchExceptionShouldHaveDepartmentTeacherConstructor ✔
     @Test
 void DepartmentMismatchExceptionShouldHaveDepartmentTeacherConstructor() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
     Course course = new Course(new Department("EEE", "Electrical and Electronics Engineering"), 101, "Physics", "Intro to Physics", 4, t);
     
     try {
         throw new DepartmantMismatchException(course, t);
     } catch (DepartmantMismatchException e) {
-        assertEquals("DepartmentMismatchException: John Doe (123) cannot teach EEE101 because currently assigned to CSE", e.toString());
+        assertEquals("DepartmentMismatchException: Yahya Efe Kuruçay (123) cannot teach EEE101 because currently assigned to CSE", e.toString());
     }
 }
     // │     ├─ shouldGetGPA ✔
     @Test
 void shouldGetGPA() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
-    Student s = new Student("Alice", "alice@example.com", 456L, cse);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
+    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
     Course c102 = new Course(cse, 102, "Programming 2", "Object-Oriented Programming", 4, t);
 
@@ -73,10 +73,10 @@ void shouldGetGPA() {
     // │     ├─ shouldCourseResultThrowCourseNotFoundException ✘ Should have thrown CourseNotFoundException
     @Test
 void shouldCourseResultThrowCourseNotFoundException() {
-    Student student = new Student("Bob", "bob@example.com", 5678L, new Department("CSE", "Computer Science Engineering"));
+    Student student = new Student("Bob", "bob@efekurucay.com", 5678L, new Department("CSE", "Computer Science Engineering"));
     
     try {
-        student.courseResult(new Course(new Department("CSE", "Computer Science Engineering"), 101, "Programming 1", "Introduction to Programming", 6, new Teacher("John Doe", "john.doe@example.com", 123L, new Department("CSE", "Computer Science Engineering"), 1)));
+        student.courseResult(new Course(new Department("CSE", "Computer Science Engineering"), 101, "Programming 1", "Introduction to Programming", 6, new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, new Department("CSE", "Computer Science Engineering"), 1)));
         fail("Should have thrown CourseNotFoundException");
     } catch (CourseNotFoundException e) {
         assertEquals("CourseNotFoundException: 5678 has not yet taken CSE101", e.toString());
@@ -86,22 +86,23 @@ void shouldCourseResultThrowCourseNotFoundException() {
     @Test
 void shouldAddCourse() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
-    Student s = new Student("Alice", "alice@example.com", 456L, cse);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
+    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
 
     s.addCourse(c101, 85); // Dersi ve notu ekle
 
     assertEquals(1, s.getCourses().size()); // Öğrencinin ders listesinde 1 ders olmalı
     assertEquals(1, s.getGrades().size()); // Öğrencinin not listesinde 1 not olmalı
-    assertEquals(85.0, s.getGrades().get(0)); // Eklenen notun doğru olduğunu kontrol et
+    assertEquals(85.0, s.getGrades().get(0), 0.01); // Eklenen notun doğru olduğunu kontrol et
 }
+
 
     // │     ├─ departmentShouldSetChair ✔
     @Test
 void departmentShouldSetChair() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher chair = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+    Teacher chair = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
 
     cse.setChair(chair); // Bölümün başkanını atayın
 
@@ -112,7 +113,7 @@ void departmentShouldSetChair() {
     @Test
 void shouldCreateCourse() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
 
     Course course = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
 
@@ -130,7 +131,7 @@ void shouldNotCreateGradStudent() {
     Department cse = new Department("CSE", "Computer Science Engineering");
     
     try {
-        new GradStudent("Alice", "alice@example.com", 456L, cse, 4, "MDE");
+        new GradStudent("me", "me@efekurucay.com", 456L, cse, 4, "MDE");
         fail("Should have thrown InvalidRankException");
     } catch (InvalidRankException e) {
         assertEquals("InvalidRankException: 4", e.toString());
@@ -142,10 +143,10 @@ void shouldNotCreateGradStudent() {
 void shouldCreateStudent() {
     Department cse = new Department("CSE", "Computer Science Engineering");
     
-    Student student = new Student("Alice", "alice@example.com", 456L, cse);
+    Student student = new Student("me", "me@efekurucay.com", 456L, cse);
 
-    assertEquals("Alice", student.getName()); // Öğrencinin adının doğru atanıp atanmadığını kontrol et
-    assertEquals("alice@example.com", student.getEmail()); // Öğrencinin e-postasının doğru atanıp atanmadığını kontrol et
+    assertEquals("me", student.getName()); // Öğrencinin adının doğru atanıp atanmadığını kontrol et
+    assertEquals("me@efekurucay.com", student.getEmail()); // Öğrencinin e-postasının doğru atanıp atanmadığını kontrol et
     assertEquals(456L, student.getId()); // Öğrencinin kimlik numarasının doğru atanıp atanmadığını kontrol et
     assertEquals(cse, student.getDepartment()); // Öğrencinin bölümünün doğru atanıp atanmadığını kontrol et
 }
@@ -156,7 +157,7 @@ void shouldCreateStudent() {
 void teachershouldSetDepartmentAndChair() {
     Department cse = new Department("CSE", "Computer Science Engineering");
     Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-    Teacher teacher = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
 
     teacher.setDepartment(eee); // Öğretmenin bölümünü değiştir
 
@@ -168,10 +169,10 @@ void teachershouldSetDepartmentAndChair() {
     @Test
 void gradStudentCourseResultThrowException() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    GradStudent gradStudent = new GradStudent("Bob", "bob@example.com", 789L, cse, 1, "Software Engineering");
+    GradStudent gradStudent = new GradStudent("Bob", "bob@efekurucay.com", 789L, cse, 1, "Software Engineering");
     
     try {
-        gradStudent.courseResult(new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1)));
+        gradStudent.courseResult(new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1)));
         fail("Should have thrown CourseNotFoundException");
     } catch (CourseNotFoundException e) {
         assertEquals("CourseNotFoundException: 789 has not yet taken CSE101", e.toString());
@@ -182,8 +183,8 @@ void gradStudentCourseResultThrowException() {
 @Test
 void shouldGetCourseGPAPoints() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
-    Student s = new Student("Alice", "alice@example.com", 456L, cse);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
+    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
 
     s.addCourse(c101, 85); // Ders notu ekle
@@ -198,21 +199,21 @@ void shouldGetCourseGPAPoints() {
 void courseShouldNotSetTeacherFromDifferentDpt() {
     Department cse = new Department("CSE", "Computer Science Engineering");
     Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, eee, 1);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, eee, 1);
 
     try {
         new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
         fail("Should have thrown DepartmantMismatchException");
     } catch (DepartmantMismatchException e) {
-        assertEquals("DepartmentMismatchException: John Doe (123) cannot teach CSE101 because currently assigned to EEE", e.toString());
+        assertEquals("DepartmentMismatchException: Yahya Efe Kuruçay (123) cannot teach CSE101 because currently assigned to EEE", e.toString());
     }
 }
     // │     ├─ shouldReplaceCourse ✘ expected:<11> but was:<17>
     @Test
 void shouldReplaceCourse() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
-    Student s = new Student("Alice", "alice@example.com", 456L, cse);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
+    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
     Course c102 = new Course(cse, 102, "Programming 2", "OOP", 4, t);
 
@@ -222,15 +223,15 @@ void shouldReplaceCourse() {
     s.addCourse(c101, 90); // İlk dersi güncelle
 
     assertEquals(1, s.getCourses().size()); // Öğrencinin ders listesinde hala 1 ders olmalı
-    assertEquals(90.0, s.getGrades().get(0)); // Güncellenen notun doğru olduğunu kontrol et
+    assertEquals(90.0, s.getGrades().get(0), 0.01); // Güncellenen notun doğru olduğunu kontrol et
 }
 
     // │     ├─ shouldGetCourseGradeLetter ✔
     @Test
 void shouldGetCourseGradeLetter() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
-    Student s = new Student("Alice", "alice@example.com", 456L, cse);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
+    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
 
     s.addCourse(c101, 85); // Ders notu ekle
@@ -243,10 +244,10 @@ void shouldGetCourseGradeLetter() {
 void shouldCreateTeacher() {
     Department cse = new Department("CSE", "Computer Science Engineering");
     
-    Teacher teacher = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
 
-    assertEquals("John Doe", teacher.getName()); // Öğretmenin adının doğru atanıp atanmadığını kontrol et
-    assertEquals("john.doe@example.com", teacher.getEmail()); // Öğretmenin e-postasının doğru atanıp atanmadığını kontrol et
+    assertEquals("Yahya Efe Kuruçay", teacher.getName()); // Öğretmenin adının doğru atanıp atanmadığını kontrol et
+    assertEquals("contact@efekurucay.com", teacher.getEmail()); // Öğretmenin e-postasının doğru atanıp atanmadığını kontrol et
     assertEquals(123L, teacher.getId()); // Öğretmenin kimlik numarasının doğru atanıp atanmadığını kontrol et
     assertEquals(cse, teacher.getDepartment()); // Öğretmenin bölümünün doğru atanıp atanmadığını kontrol et
     assertEquals("Teaching Assistant", teacher.getTitle()); // Öğretmenin başlık bilgisinin doğru atanıp atanmadığını kontrol et
@@ -267,7 +268,7 @@ void shouldCreateDepartment() {
 void teachershouldSetDepartment() {
     Department cse = new Department("CSE", "Computer Science Engineering");
     Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-    Teacher teacher = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
 
     teacher.setDepartment(eee); // Öğretmenin bölümünü değiştir
 
@@ -278,7 +279,7 @@ void teachershouldSetDepartment() {
     @Test
 void teacherShouldPromoteDemote() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher teacher = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 2);
+    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 2);
 
     teacher.promote(); // Öğretmenin rütbesini yükselt
     assertEquals(3, teacher.rank); // Öğretmenin rütbesinin doğru yükseltilip yükseltilmediğini kontrol et
@@ -291,8 +292,8 @@ void teacherShouldPromoteDemote() {
     @Test
 void shouldGetGPAwithOneFailedCourse() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
-    Student s = new Student("Alice", "alice@example.com", 456L, cse);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
+    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
     Course c102 = new Course(cse, 102, "Programming 2", "OOP", 4, t);
 
@@ -306,8 +307,8 @@ void shouldGetGPAwithOneFailedCourse() {
     @Test
 void shouldGetCourseResultFailed() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
-    Student s = new Student("Alice", "alice@example.com", 456L, cse);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
+    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
     Course c102 = new Course(cse, 102, "Programming 2", "OOP", 4, t);
 
@@ -321,13 +322,13 @@ void shouldGetCourseResultFailed() {
     @Test
 void DepartmentMismatchExceptionShouldHaveCourseTeacherConstructor() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
 
     try {
         throw new DepartmantMismatchException(c101, t);
     } catch (DepartmantMismatchException e) {
-        assertEquals("DepartmentMismatchException: John Doe (123) cannot teach CSE101 because currently assigned to CSE", e.toString());
+        assertEquals("DepartmentMismatchException: Yahya Efe Kuruçay (123) cannot teach CSE101 because currently assigned to CSE", e.toString());
     }
 }
 
@@ -335,7 +336,7 @@ void DepartmentMismatchExceptionShouldHaveCourseTeacherConstructor() {
     @Test
 void courseMutators() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
 
     // Department değiştir
@@ -364,7 +365,7 @@ void courseMutators() {
     @Test
 void teacherShouldNotDemote() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher teacher = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
 
     // En düşük rütbede olduğunda rütbesini düşürmeye çalış
     try {
@@ -379,11 +380,12 @@ void teacherShouldNotDemote() {
 }
 
     // │     ├─ gradStudentShouldGetCourseGPAPoints ✔
+    @SuppressWarnings("deprecation")
     @Test
 void gradStudentShouldGetCourseGPAPoints() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
-    GradStudent gradStudent = new GradStudent("Alice", "alice@example.com", 456L, cse, 1, "Thesis Topic");
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
+    GradStudent gradStudent = new GradStudent("me", "me@efekurucay.com", 456L, cse, 1, "Thesis Topic");
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
 
     // Öğrencinin ders notunu ekleyin
@@ -397,8 +399,8 @@ void gradStudentShouldGetCourseGPAPoints() {
     @Test
 void gradStudentShouldGetCourseResult() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
-    GradStudent gradStudent = new GradStudent("Alice", "alice@example.com", 456L, cse, 1, "Thesis Topic");
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
+    GradStudent gradStudent = new GradStudent("me", "me@efekurucay.com", 456L, cse, 1, "Thesis Topic");
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
 
     // Öğrencinin ders notunu ekleyin
@@ -412,7 +414,7 @@ void gradStudentShouldGetCourseResult() {
     @Test
 void teacherShouldNotPromote() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher teacher = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 5);
+    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 5);
 
     // En yüksek rütbede olduğunda rütbesini yükseltmeye çalış
     try {
@@ -430,8 +432,8 @@ void teacherShouldNotPromote() {
     @Test
 void gradStudentShouldGetCourseGradeLetter() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
-    GradStudent gradStudent = new GradStudent("Alice", "alice@example.com", 456L, cse, 1, "Thesis Topic");
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
+    GradStudent gradStudent = new GradStudent("me", "me@efekurucay.com", 456L, cse, 1, "Thesis Topic");
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
 
     // Öğrencinin ders notunu ekleyin
@@ -445,7 +447,7 @@ void gradStudentShouldGetCourseGradeLetter() {
     @Test
 void shouldThrowInvalidGradeException() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Student student = new Student("Jane Doe", "jane.doe@example.com", 456L, cse);
+    Student student = new Student("Yahya Efe", "yahya@efekurucay.com", 456L, cse);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, null);
 
     // Geçersiz bir not ekleyin
@@ -478,6 +480,7 @@ void departmentAccessors() {
 void departmentShouldNotSetInvalidID() {
     // Geçersiz bir departman kodu ile departman oluşturmayı deneyin
     try {
+        @SuppressWarnings("unused")
         Department department = new Department("CS", "Computer Science");
         fail("Should have thrown InvalidCodeException");
     } catch (InvalidCodeException e) {
@@ -489,13 +492,13 @@ void departmentShouldNotSetInvalidID() {
     @Test
 void shouldCreateGradStudent() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    GradStudent gradStudent = new GradStudent("Alice", "alice@example.com", 456L, cse, 1, "Thesis Topic");
+    GradStudent gradStudent = new GradStudent("me", "me@efekurucay.com", 456L, cse, 1, "Thesis Topic");
 
     // Yüksek lisans öğrencisinin adını kontrol et
-    assertEquals("Alice", gradStudent.getName());
+    assertEquals("me", gradStudent.getName());
 
     // Yüksek lisans öğrencisinin e-posta adresini kontrol et
-    assertEquals("alice@example.com", gradStudent.getEmail());
+    assertEquals("me@efekurucay.com", gradStudent.getEmail());
 
     // Yüksek lisans öğrencisinin kimlik numarasını kontrol et
     assertEquals(456L, gradStudent.getId());
@@ -514,7 +517,7 @@ void shouldCreateGradStudent() {
     @Test
 void courseAccessors() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("John Doe", "john.doe@example.com", 123L, cse, 1);
+    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
     Course course = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
 
     // Bölümü kontrol et
@@ -540,7 +543,7 @@ void courseAccessors() {
     @Test
 void shouldGetCourseResultConditionallyPassed() {
     Department cse = new Department("CSE", "Computer Science Engineering");
-    Student student = new Student("John Doe", "john.doe@example.com", 123L, cse);
+    Student student = new Student("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse);
     Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, null);
 
     // Öğrencinin ders notunu ekleyin (55 puan, koşullu geçme sınırı olan 45'in üzerinde)
@@ -566,7 +569,7 @@ void departmentMutators() {
     assertEquals("Electrical and Computer Engineering", department.getName());
 
     // Başkanı atanmışsa, başkanı değiştir
-    Teacher chair = new Teacher("Alice", "alice@example.com", 456L, department, 3);
+    Teacher chair = new Teacher("me", "me@efekurucay.com", 456L, department, 3);
     department.setChair(chair);
     assertEquals(chair, department.getChair());
 
