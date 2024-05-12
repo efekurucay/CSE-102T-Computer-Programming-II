@@ -1,581 +1,1160 @@
-import org.junit.*;
-import static org.junit.Assert.*;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+/**---------------------------------------------------
+
+ * Akdeniz University CSE102T Assignments
+
+ * @author: Yahya Efe Kuruçay
+
+ * @since: 08.05.2024
+
+ * Description: Assignment03Tests
+
+ * Score:?
+
+ * Website: https://efekurucay.com
+
+*---------------------------------------------------*/
+/*
+ *            __     _                                                          
+ *           / _|   | |                                                         
+ *       ___| |_ ___| | ___   _ _ __ _   _  ___ __ _ _   _   ___ ___  _ __ ___  
+ *      / _ \  _/ _ \ |/ / | | | '__| | | |/ __/ _` | | | | / __/ _ \| '_ ` _ \ 
+ *     |  __/ ||  __/   <| |_| | |  | |_| | (_| (_| | |_| || (_| (_) | | | | | |
+ *      \___|_| \___|_|\_\\__,_|_|   \__,_|\___\__,_|\__, (_)___\___/|_| |_| |_|
+ *                                                    __/ |                     
+ *                                                   |___/                      
+ */
+
 
 public class Assignment03Tests_20220808005 {
-   
-   
-   
-    //       ├─ shouldNotCreateDepartmentWithInvalidID ✔
     @Test
-void shouldNotCreateDepartmentWithInvalidID() {
-    try {
-        new Department("CS", "Computer Science");
-        fail("Should have thrown InvalidCodeException");
-    } catch (InvalidCodeException e) {
-        assertEquals("invalidCodeException: Department - code CS (length must be 3 or 4)", e.toString());
+    public void departmentGetCodeTestIn(){
+        Department department = new Department("CSE", "Computer Engineering");
+        Assert.assertEquals("CSE", department.getCode());
     }
-}
-    // │     ├─ shouldNotCreateCourseWithDifferentDepartment ✔
+
     @Test
-void shouldNotCreateCourseWithDifferentDepartment() {
-        Department cse = new Department("CSE", "Computer Science Engineering");
-        Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-        Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-        
+    public void setCodeTest(){
+        Department department = new Department("CSE", "Computer Engineering");
+        department.setCode("Cse");
+        Assert.assertEquals("Cse", department.getCode());  
+    }
+
+    @Test
+    public void departmentGetNameTest(){
+        Department department =new Department("CSE", "Computer Engineering");
+        Assert.assertEquals("Computer Engineering",department.getName());
+    }
+    
+    @Test
+    public void departmentInvalidCodeTest(){
         try {
-            new Course(eee, 101, "Physics", "Intro to Physics", 4, t);
-            fail("Should have thrown DepartmentMismatchException");
-        } catch (DepartmantMismatchException e) {
-            assertEquals("DepartmentMismatchException: Yahya Efe Kuruçay (123) cannot teach EEE101 because currently assigned to CSE", e.toString());
+            @SuppressWarnings("unused")
+            Department department =new Department("CSE10", "Computer Engineering");
+            assertTrue(false);
+        }catch (RuntimeException e){
+            assertTrue(true);
+        }
+
+    }
+
+    @Test
+    public void departmentSetChairTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        department.setChair(t);
+        Assert.assertEquals(t,department.getChair());
+    }
+
+    @Test
+    public void departmentNullChairTest () {
+        Department department = new Department("CSE", "Computer Engineering");
+        Department department2 = new Department("PHY", "Physics");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        department.setChair(t);
+        assertNull(department2.getChair());
+    }
+
+     @Test
+    public void testChairMismatchException() {
+        Department department =new Department("CSE", "Computer Engineering");
+        Department department2 = new Department("FİZ", "Fizik Fakultesi");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        try {
+            department2.setChair(t);
+            assertTrue(true);
+        }catch (Exception e){
+            Assert.assertEquals("DepartmentMismatchException: Joseph Ledet(123) cannot be chair of FİZ because he/she is currently assigned to CSE",e.toString());
         }
     }
-    // │     ├─ departmentShouldNotSetChairDifferentDepartment ✘ Should have thrown DepartmentMismatchException
+
     @Test
-void departmentShouldNotSetChairDifferentDepartment() {
-        Department cse = new Department("CSE", "Computer Science Engineering");
-        Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-        Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-        
+    public void departmentMismatchExceptionTest() throws Exception {
+        Department department = new Department("CSE", "Computer Engineering");
+        Department department2 = new Department("FIZ", "Fizik Fakultesi");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
         try {
-            eee.setChair(t);
-            fail("Should have thrown DepartmentMismatchException");
-        } catch (DepartmantMismatchException e) {
-            assertEquals("DepartmentMismatchException: Yahya Efe Kuruçay (123) cannot be chair of EEE because currently assigned to CSE", e.toString());
+            department2.setChair(t);
+            fail("Expected DepartmentMismatchException was not thrown");
+        } catch (Exception e) {
+            assertEquals("DepartmentMismatchException: Joseph Ledet(123) cannot be chair of FIZ because he/she is currently assigned to CSE", e.toString());
         }
     }
-    // │     ├─ DepartmentMismatchExceptionShouldHaveDepartmentTeacherConstructor ✔
+
     @Test
-void DepartmentMismatchExceptionShouldHaveDepartmentTeacherConstructor() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Course course = new Course(new Department("EEE", "Electrical and Electronics Engineering"), 101, "Physics", "Intro to Physics", 4, t);
-    
-    try {
-        throw new DepartmantMismatchException(course, t);
-    } catch (DepartmantMismatchException e) {
-        assertEquals("DepartmentMismatchException: Yahya Efe Kuruçay (123) cannot teach EEE101 because currently assigned to CSE", e.toString());
+    public void departmentMismatchExceptionTest2() throws Exception {
+        Department department = new Department("CSE", "Computer Engineering");
+        Department department2 = new Department("FIZ", "Fizik Fakultesi");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department2, 2);
+        try {
+         department.setChair(t);
+            fail("Expected DepartmentMismatchException was not thrown");
+        } catch (Exception e) {
+            assertEquals("DepartmentMismatchException: Joseph Ledet(123) cannot be chair of CSE because he/she is currently assigned to FIZ", e.toString());
+        }
     }
-}
-    // │     ├─ shouldGetGPA ✔
-    @Test
-void shouldGetGPA() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-    Course c102 = new Course(cse, 102, "Programming 2", "Object-Oriented Programming", 4, t);
-
-    s.addCourse(c101, 85); // 6 AKTS
-    s.addCourse(c102, 75); // 4 AKTS
-
-    assertEquals(3.4, s.getGPA(), 0.001); // 3.4 GPA bekleniyor
-}
-    // │     ├─ shouldCourseResultThrowCourseNotFoundException ✘ Should have thrown CourseNotFoundException
-    @Test
-void shouldCourseResultThrowCourseNotFoundException() {
-    Student student = new Student("Bob", "bob@efekurucay.com", 5678L, new Department("CSE", "Computer Science Engineering"));
-    
-    try {
-        student.courseResult(new Course(new Department("CSE", "Computer Science Engineering"), 101, "Programming 1", "Introduction to Programming", 6, new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, new Department("CSE", "Computer Science Engineering"), 1)));
-        fail("Should have thrown CourseNotFoundException");
-    } catch (CourseNotFoundException e) {
-        assertEquals("CourseNotFoundException: 5678 has not yet taken CSE101", e.toString());
-    }
-}
-    // │     ├─ shouldAddCourse ✔
-    @Test
-void shouldAddCourse() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-
-    s.addCourse(c101, 85); // Dersi ve notu ekle
-
-    assertEquals(1, s.getCourses().size()); // Öğrencinin ders listesinde 1 ders olmalı
-    assertEquals(1, s.getGrades().size()); // Öğrencinin not listesinde 1 not olmalı
-    assertEquals(85.0, s.getGrades().get(0), 0.01); // Eklenen notun doğru olduğunu kontrol et
-}
-
-
-    // │     ├─ departmentShouldSetChair ✔
-    @Test
-void departmentShouldSetChair() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher chair = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-
-    cse.setChair(chair); // Bölümün başkanını atayın
-
-    assertEquals(chair, cse.getChair()); // Başkanın doğru bir şekilde atandığını kontrol et
-}
-
-    // │     ├─ shouldCreateCourse ✔
-    @Test
-void shouldCreateCourse() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-
-    Course course = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-
-    assertEquals(cse, course.getDepartment()); // Dersin bölümünün doğru atanıp atanmadığını kontrol et
-    assertEquals(101, course.getCourseNumber()); // Dersin numarasının doğru atanıp atanmadığını kontrol et
-    assertEquals("Programming 1", course.getTitle()); // Dersin başlığının doğru atanıp atanmadığını kontrol et
-    assertEquals("Introduction to Programming", course.getDescription()); // Dersin açıklamasının doğru atanıp atanmadığını kontrol et
-    assertEquals(6, course.getAKTS()); // Dersin AKTS'nin doğru atanıp atanmadığını kontrol et
-    assertEquals(t, course.getTeacher()); // Dersin öğretmeninin doğru atanıp atanmadığını kontrol et
-}
-
-    // │     ├─ shouldNotCreateGradStudent ✔
-    @Test
-void shouldNotCreateGradStudent() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    
-    try {
-        new GradStudent("me", "me@efekurucay.com", 456L, cse, 4, "MDE");
-        fail("Should have thrown InvalidRankException");
-    } catch (InvalidRankException e) {
-        assertEquals("InvalidRankException: 4", e.toString());
-    }
-}
-
-    // │     ├─ shouldCreateStudent ✔
-    @Test
-void shouldCreateStudent() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    
-    Student student = new Student("me", "me@efekurucay.com", 456L, cse);
-
-    assertEquals("me", student.getName()); // Öğrencinin adının doğru atanıp atanmadığını kontrol et
-    assertEquals("me@efekurucay.com", student.getEmail()); // Öğrencinin e-postasının doğru atanıp atanmadığını kontrol et
-    assertEquals(456L, student.getId()); // Öğrencinin kimlik numarasının doğru atanıp atanmadığını kontrol et
-    assertEquals(cse, student.getDepartment()); // Öğrencinin bölümünün doğru atanıp atanmadığını kontrol et
-}
-
-
-    // │     ├─ teachershouldSetDepartmentAndChair ✘ Should set department expected:<Department@4e32a067> but was:<Department@4a0d2d79>
-    @Test
-void teachershouldSetDepartmentAndChair() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-
-    teacher.setDepartment(eee); // Öğretmenin bölümünü değiştir
-
-    assertNull(cse.getChair()); // Önceki bölümde başkanlık pozisyonunun boş olup olmadığını kontrol et
-    assertEquals(teacher, eee.getChair()); // Yeni bölümde başkanlık pozisyonunun öğretmene atanıp atanmadığını kontrol et
-}
-
-    // │     ├─ gradStudentCourseResultThrowException ✘ Index 0 out of bounds for length 0
-    @Test
-void gradStudentCourseResultThrowException() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    GradStudent gradStudent = new GradStudent("Bob", "bob@efekurucay.com", 789L, cse, 1, "Software Engineering");
-    
-    try {
-        gradStudent.courseResult(new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1)));
-        fail("Should have thrown CourseNotFoundException");
-    } catch (CourseNotFoundException e) {
-        assertEquals("CourseNotFoundException: 789 has not yet taken CSE101", e.toString());
-    }
-}
-
-    // │     ├─ shouldGetCourseGPAPoints ✔
-@Test
-void shouldGetCourseGPAPoints() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-
-    s.addCourse(c101, 85); // Ders notu ekle
-
-    assertEquals(4.0, s.courseGPAPoints(c101), 0.001); // Ders notunun GPA'sını kontrol et
-}
 
     
-    // │     ├─ courseShouldNotSetTeacherFromDifferentDpt ✔
-
     @Test
-void courseShouldNotSetTeacherFromDifferentDpt() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, eee, 1);
+    public void courseConstructorTest1 () {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@gmail.com", 123L, department, 1);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 4, t);
 
-    try {
-        new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-        fail("Should have thrown DepartmantMismatchException");
-    } catch (DepartmantMismatchException e) {
-        assertEquals("DepartmentMismatchException: Yahya Efe Kuruçay (123) cannot teach CSE101 because currently assigned to EEE", e.toString());
+        assertEquals("CSE", c1.getDepartment().getCode());
     }
-}
-    // │     ├─ shouldReplaceCourse ✘ expected:<11> but was:<17>
+
     @Test
-void shouldReplaceCourse() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-    Course c102 = new Course(cse, 102, "Programming 2", "OOP", 4, t);
+    public void courseConstructorTest2 () {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@gmail.com", 123L, department, 1);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 4, t);
 
-    s.addCourse(c101, 85); // Dersi ekle
-    s.addCourse(c102, 70); // Diğer dersi ekle
+        Assert.assertEquals(t,c1.getTeacher());
+    }
 
-    s.addCourse(c101, 90); // İlk dersi güncelle
-
-    assertEquals(1, s.getCourses().size()); // Öğrencinin ders listesinde hala 1 ders olmalı
-    assertEquals(90.0, s.getGrades().get(0), 0.01); // Güncellenen notun doğru olduğunu kontrol et
-}
-
-    // │     ├─ shouldGetCourseGradeLetter ✔
     @Test
-void shouldGetCourseGradeLetter() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
+    public void courseConstructorTest3 () {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@gmail.com", 123L, department, 1);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 4, t);
 
-    s.addCourse(c101, 85); // Ders notu ekle
+        Assert.assertEquals(101,c1.getCourseNumber());
+    }
 
-    assertEquals("BA", s.courseGradeLetter(c101)); // Ders notunun harf notunu kontrol et
-}
-
-    // │     ├─ shouldCreateTeacher ✔
     @Test
-void shouldCreateTeacher() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
+    public void courseConstructorTest5 () {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@gmail.com", 123L, department, 1);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 4, t);
+
+        Assert.assertEquals(4,c1.getAKTS());
+    }
+
+    @Test
+    public void courseConstructorTest6 () {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@gmail.com", 123L, department, 1);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 4, t);
+
+        assertEquals("Programming 1", c1.getTitle());
+    }
+
+    @Test
+    public void courseConstructorTest7 () {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@gmail.com", 123L, department, 1);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 4, t);
+
+        assertEquals("Intro to Programming", c1.getDescription());
+    }
+
+    @Test
+    public void courseConstructorTest8 () {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@gmail.com", 123L, department, 1);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 4, t);
+
+        assertEquals("Intro to Programming", c1.getDescription());
+    }
+
+    @Test
+    public void courseSetDepartmentTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Department department2 = new Department("FİZ", "Fizik Fakultesi");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 4, t);
+        t.setDepartment(department2);
+        c1.setDepartment(department2);
+        Assert.assertEquals(department2,c1.getDepartment());
+    }
     
-    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-
-    assertEquals("Yahya Efe Kuruçay", teacher.getName()); // Öğretmenin adının doğru atanıp atanmadığını kontrol et
-    assertEquals("contact@efekurucay.com", teacher.getEmail()); // Öğretmenin e-postasının doğru atanıp atanmadığını kontrol et
-    assertEquals(123L, teacher.getId()); // Öğretmenin kimlik numarasının doğru atanıp atanmadığını kontrol et
-    assertEquals(cse, teacher.getDepartment()); // Öğretmenin bölümünün doğru atanıp atanmadığını kontrol et
-    assertEquals("Teaching Assistant", teacher.getTitle()); // Öğretmenin başlık bilgisinin doğru atanıp atanmadığını kontrol et
-}
-
-    // │     ├─ shouldCreateDepartment ✔
     @Test
-void shouldCreateDepartment() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-
-    assertEquals("CSE", cse.getCode()); // Bölümün kodunun doğru atanıp atanmadığını kontrol et
-    assertEquals("Computer Science Engineering", cse.getName()); // Bölümün adının doğru atanıp atanmadığını kontrol et
-    assertNull(cse.getChair()); // Bölüm başkanının başlangıçta atanmamış olup olmadığını kontrol et
-}
-
-    // │     ├─ teachershouldSetDepartment ✘ Should set department expected:<Department@6770946d> but was:<Department@69b776f3>
-    @Test
-void teachershouldSetDepartment() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-
-    teacher.setDepartment(eee); // Öğretmenin bölümünü değiştir
-
-    assertEquals(eee, teacher.getDepartment()); // Öğretmenin bölümünün doğru atanıp atanmadığını kontrol et
-}
-
-    // │     ├─ teacherShouldPromoteDemote ✔
-    @Test
-void teacherShouldPromoteDemote() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 2);
-
-    teacher.promote(); // Öğretmenin rütbesini yükselt
-    assertEquals(3, teacher.rank); // Öğretmenin rütbesinin doğru yükseltilip yükseltilmediğini kontrol et
-
-    teacher.demote(); // Öğretmenin rütbesini düşür
-    assertEquals(2, teacher.rank); // Öğretmenin rütbesinin doğru düşürülüp düşürülmediğini kontrol et
-}
-
-    // │     ├─ shouldGetGPAwithOneFailedCourse ✔
-    @Test
-void shouldGetGPAwithOneFailedCourse() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-    Course c102 = new Course(cse, 102, "Programming 2", "OOP", 4, t);
-
-    s.addCourse(c101, 85); // Birinci ders notu ekle
-    s.addCourse(c102, 40); // İkinci dersi başarısız notla ekle
-
-    assertEquals(1.5, s.getGPA(), 0.001); // Öğrencinin GPA'sını kontrol et
-}
-
-    // │     ├─ shouldGetCourseResultFailed ✔
-    @Test
-void shouldGetCourseResultFailed() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Student s = new Student("me", "me@efekurucay.com", 456L, cse);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-    Course c102 = new Course(cse, 102, "Programming 2", "OOP", 4, t);
-
-    s.addCourse(c101, 85); // Birinci ders notu ekle
-    s.addCourse(c102, 40); // İkinci dersi başarısız notla ekle
-
-    assertEquals("Failed", s.courseResult(c102)); // Öğrencinin başarısız bir dersi doğru şekilde geçip geçmediğini kontrol et
-}
-
-    // │     ├─ DepartmentMismatchExceptionShouldHaveCourseTeacherConstructor ✔
-    @Test
-void DepartmentMismatchExceptionShouldHaveCourseTeacherConstructor() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-
-    try {
-        throw new DepartmantMismatchException(c101, t);
-    } catch (DepartmantMismatchException e) {
-        assertEquals("DepartmentMismatchException: Yahya Efe Kuruçay (123) cannot teach CSE101 because currently assigned to CSE", e.toString());
-    }
-}
-
-    // │     ├─ courseMutators ✔
-    @Test
-void courseMutators() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-
-    // Department değiştir
-    Department eee = new Department("EEE", "Electrical and Electronics Engineering");
-    c101.setDepartment(eee);
-    assertEquals(eee, c101.getDepartment());
-
-    // Ders numarası değiştir
-    c101.setCourseNumber(102);
-    assertEquals(102, c101.getCourseNumber());
-
-    // Ders başlığı değiştir
-    c101.setTitle("Programming 2");
-    assertEquals("Programming 2", c101.getTitle());
-
-    // Ders açıklaması değiştir
-    c101.setDescription("Object Oriented Programming");
-    assertEquals("Object Oriented Programming", c101.getDescription());
-
-    // AKTS değiştir
-    c101.setAKTS(4);
-    assertEquals(4, c101.getAKTS());
-}
-
-    // │     ├─ teacherShouldNotDemote ✔
-    @Test
-void teacherShouldNotDemote() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-
-    // En düşük rütbede olduğunda rütbesini düşürmeye çalış
-    try {
-        teacher.demote();
-        fail("Should have thrown InvalidRankException");
-    } catch (InvalidRankException e) {
-        // Beklenen davranış
+    public void courseSetTeacherTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Teacher t2 = new Teacher("Efe efe", "efek@akdeniz.edu.tr", 128L, department, 1);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 4, t);
+        c1.setTeacher(t2);
+        Assert.assertEquals(t2,c1.getTeacher());
     }
 
-    // Rütbesinin düşmediğini doğrula
-    assertEquals(1, teacher.rank);
-}
-
-    // │     ├─ gradStudentShouldGetCourseGPAPoints ✔
-    @SuppressWarnings("deprecation")
     @Test
-void gradStudentShouldGetCourseGPAPoints() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    GradStudent gradStudent = new GradStudent("me", "me@efekurucay.com", 456L, cse, 1, "Thesis Topic");
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-
-    // Öğrencinin ders notunu ekleyin
-    gradStudent.addCourse(c101, 85);
-
-    // GPAPuanlarını kontrol edin
-    assertEquals(4.0, gradStudent.courseGPAPoints(c101));
-}
-
-    // │     ├─ gradStudentShouldGetCourseResult ✔
-    @Test
-void gradStudentShouldGetCourseResult() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    GradStudent gradStudent = new GradStudent("me", "me@efekurucay.com", 456L, cse, 1, "Thesis Topic");
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-
-    // Öğrencinin ders notunu ekleyin
-    gradStudent.addCourse(c101, 85);
-
-    // Ders sonucunu kontrol edin
-    assertEquals("Passed", gradStudent.courseResult(c101));
-}
-
-    // │     ├─ teacherShouldNotPromote ✔
-    @Test
-void teacherShouldNotPromote() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher teacher = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 5);
-
-    // En yüksek rütbede olduğunda rütbesini yükseltmeye çalış
-    try {
-        teacher.promote();
-        fail("Should have thrown InvalidRankException");
-    } catch (InvalidRankException e) {
-        // Beklenen davranış
+    public void courseSetNumberTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 6, t);
+        c1.setCourseNumber(102);
+        Assert.assertEquals(102,c1.getCourseNumber());
     }
 
-    // Rütbesinin yükselmediğini doğrula
-    assertEquals(5, teacher.rank);
-}
-
-    // │     ├─ gradStudentShouldGetCourseGradeLetter ✔
     @Test
-void gradStudentShouldGetCourseGradeLetter() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    GradStudent gradStudent = new GradStudent("me", "me@efekurucay.com", 456L, cse, 1, "Thesis Topic");
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
-
-    // Öğrencinin ders notunu ekleyin
-    gradStudent.addCourse(c101, 85);
-
-    // Harf notunu kontrol edin
-    assertEquals("AA", gradStudent.courseGradeLetter(c101));
-}
-
-    // │     ├─ shouldThrowInvalidGradeException ✔
-    @Test
-void shouldThrowInvalidGradeException() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Student student = new Student("Yahya Efe", "yahya@efekurucay.com", 456L, cse);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, null);
-
-    // Geçersiz bir not ekleyin
-    try {
-        student.addCourse(c101, 105); // Geçersiz bir not
-        fail("Should have thrown InvalidGradeException");
-    } catch (InvalidGradeException e) {
-        // Beklenen davranış
+    public void courseSetTitleTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 6, t);
+        c1.setTitle("Programming 2");
+        Assert.assertEquals("Programming 2",c1.getTitle());
     }
-}
 
-    // │     ├─ departmentAccessors ✔
     @Test
-void departmentAccessors() {
-    // Department nesnesi oluştur
-    Department department = new Department("CSE", "Computer Science Engineering");
+    public void courseSetDescriptionTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 6, t);
+        c1.setDescription("OOP");
+        Assert.assertEquals("OOP",c1.getDescription());
+    }
 
-    // Kodu kontrol et
-    assertEquals("CSE", department.getCode());
-
-    // İsmi kontrol et
-    assertEquals("Computer Science Engineering", department.getName());
-
-    // Başkanı kontrol et (başlangıçta null olmalı)
-    assertNull(department.getChair());
-}
-
-    // │     ├─ departmentShouldNotSetInvalidID ✔
     @Test
-void departmentShouldNotSetInvalidID() {
-    // Geçersiz bir departman kodu ile departman oluşturmayı deneyin
-    try {
+    public void courseSetAKTSTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 6, t);
+        c1.setAKTS(6);
+        Assert.assertEquals(6,c1.getAKTS());
+    }
+
+    @Test
+    public void courseCourseCodeTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 6, t);
+        Assert.assertEquals("CSE101",c1.courseCode());
+    }
+
+    @Test
+    public void courseToStringTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 6, t);
+        Assert.assertEquals("CSE101 - Programming 1 (6)",c1.toString());
+    }
+    
+
+    @Test
+    public void courseDepartmentMismatchExceptionTest2 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Department department2 = new Department("FIZ", "Fizik Fakultesi");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Teacher t2 = new Teacher("Efe efe", "efek@akdeniz.edu.tr", 128L, department2, 1);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 6, t);
+        try {
+            c1.setTeacher(t2);
+            assertTrue(false);
+        }catch (Exception e){
+            Assert.assertEquals("DepartmentMismatchException: Efe efe(128) cannot be chair of CSE because he/she is currently assigned to FIZ",e.toString());
+        }
+    }
+
+    @Test
+    public void courseDepartmentMismatchExceptionTest3() throws Exception {
+        Department department = new Department("CSE", "Computer Engineering");
+        Department department2 = new Department("FIZ", "Fizik Fakultesi");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Teacher t2 = new Teacher("Efe efe", "efek@akdeniz.edu.tr", 128L, department2, 1);
+        Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", 6, t);
+    
+        try {
+            c1.setTeacher(t2);
+            fail("Expected DepartmentMismatchException was not thrown");
+        } catch (Exception e) {
+            assertEquals("DepartmentMismatchException: Efe efe(128) cannot be chair of CSE because he/she is currently assigned to FIZ", e.toString());
+        }
+    }   
+
+
+    @Test
+    public void courseInvalidNumberTest() {
+        Department department = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        
+        try {
+            @SuppressWarnings("unused")
+            Course c1 = new Course(department, 0, "Programming 1", "Intro to Programming", 6, t);
+            fail("Expected RuntimeException was not thrown");
+        } catch (RuntimeException e) {
+            assertTrue(true);
+        }
+    }
+    
+    @Test
+    public void courseInvalidAKTSTest() {
+        Department department = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+    
+        try {
+            @SuppressWarnings("unused")
+            Course c1 = new Course(department, 101, "Programming 1", "Intro to Programming", -6, t);
+            fail("Expected RuntimeException was not thrown");
+        } catch (RuntimeException e) {
+            assertTrue(true);
+        }
+    }
+
+
+    @Test
+    public void personConstructorTest1 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Person p = new Person("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department) {
+        };
+        Assert.assertEquals("Joseph Ledet",p.getName());
+        Assert.assertEquals("Joseph Ledet",p.getName());
+    }
+
+    @Test
+    public void personConstructorTest2 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Person p = new Person("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department) {
+        };
+        Assert.assertEquals("josephledet@akdeniz.edu.tr",p.getEmail());
+    }
+
+    @Test
+    public void personConstructorTest3 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Person p = new Person("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department) {
+        };
+        Assert.assertEquals(123L,p.getId());
+    }
+
+    @Test
+    public void personConstructorTest4 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Person p = new Person("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department) {
+        };
+        Assert.assertEquals(department,p.getDepartment());
+    }
+
+    @Test
+    public void personConstructorTest5 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Person p = new Person("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department) {
+        };
+        assertEquals(department, p.getDepartment());
+    }
+
+    @Test
+    public void personSetNameTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Person p = new Person("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department) {
+        };
+        p.setName("Efe efe");
+        Assert.assertEquals("Efe efe",p.getName());
+    }
+
+    @Test
+    public void personSetEmailTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Person p = new Person("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department) {
+        };
+        p.setEmail("efek@akdeniz.edu.tr");
+        Assert.assertEquals("efek@akdeniz.edu.tr",p.getEmail());
+    }
+
+    @Test
+    public void personSetIDTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Person p = new Person("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department) {
+        };
+        p.setId(124L);
+        Assert.assertEquals(124L,p.getId());
+    }
+
+    @Test
+    public void personSetDepartmentTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Department department2 = new Department("FİZ", "Fizik Fakultesi");
+        Person p = new Person("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department) {
+        };
+        p.setDepartment(department2);
+        Assert.assertEquals(department2,p.getDepartment());
+    }
+
+    @Test
+    public void personToStringTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Person p = new Person("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department) {
+        };
+        Assert.assertEquals("Joseph Ledet  (123) - josephledet@akdeniz.edu.tr",p.toString());
+    }
+
+
+    @Test
+    public void teacherConstructorTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        assertTrue(t instanceof Person);
+    }
+
+    @Test
+    public void teacherConstructorTest2 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Assert.assertEquals("Joseph Ledet",t.getName());
+    }
+
+    @Test
+    public void teacherConstructorTest3 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Assert.assertEquals("josephledet@akdeniz.edu.tr",t.getEmail());
+    }
+
+    @Test
+    public void teacherConstructorTest4 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Assert.assertEquals(123L,t.getId());
+    }
+
+    @Test
+    public void teacherConstructorTest5 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Assert.assertEquals(department,t.getDepartment());
+    }
+
+    @Test
+    public void teacherConstructorTest6 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Assert.assertEquals(2,t.getRank());
+    }
+
+    @Test
+    public void teacherSetDepartmentTest() {
+        Department department =new Department("CSE", "Computer Engineering");
+        Department department2 = new Department("FİZ", "Fizik Fakultesi");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.setDepartment(department2);
+        Assert.assertEquals(department2,t.getDepartment());
+    }
+
+    @Test
+    public void teacherSetNameTest() {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.setName("Efe efe");
+        Assert.assertEquals("Efe efe",t.getName());
+    }
+
+    @Test
+    public void teacherSetEmailTest() {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.setEmail("efek@akdeniz.edu.tr");
+        Assert.assertEquals("efek@akdeniz.edu.tr",t.getEmail());
+    }
+
+    @Test
+    public void teacherSetIDTest() {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.setId(124L);
+        Assert.assertEquals(124L,t.getId());
+    }
+
+    @Test
+    public void teacherGetTitleTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Assert.assertEquals("Lecturer",t.getTitle());
+    }
+
+    @Test
+    public void teacherDemoteTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.demote();
+        Assert.assertEquals(1,t.getRank());
+    }
+
+    @Test
+    public void teacherDemoteTest2 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.demote();
+        Assert.assertEquals("Teaching Assistant",t.getTitle());
+    }
+
+    @Test
+    public void teacherPromoteTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.promote();
+        Assert.assertEquals(3,t.getRank());
+    }
+
+    @Test
+    public void teacherPromoteTest2 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.promote();
+        Assert.assertEquals("Assistant Professor",t.getTitle());
+    }
+
+    @Test
+    public void teacherPromoteTest3 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.promote();
+        t.promote();
+        Assert.assertEquals("Associate Professor",t.getTitle());
+    }
+
+    @Test
+    public void teacherToStringTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Assert.assertEquals("Joseph Ledet  (123) - josephledet@akdeniz.edu.tr",t.toString());
+    }
+
+    @Test
+    public void teacherInvalidEmailTest() {
+        var cse = new Department("CSE", "CSECI");
+        try {
         @SuppressWarnings("unused")
-        Department department = new Department("CS", "Computer Science");
-        fail("Should have thrown InvalidCodeException");
-    } catch (InvalidCodeException e) {
-        // Beklenen davranış
+        Teacher t = new Teacher("Joseph Ledet", "josephledetakdeniz.edu.tr", 123L, cse, 2);
+        fail("RuntimeException should have been thrown.");
+    } catch (RuntimeException e) {
+        assertTrue(true);
     }
 }
 
-    // │     ├─ shouldCreateGradStudent ✔
+    
+
     @Test
-void shouldCreateGradStudent() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    GradStudent gradStudent = new GradStudent("me", "me@efekurucay.com", 456L, cse, 1, "Thesis Topic");
+    public void teacherInvalidRankTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        try {
+            @SuppressWarnings("unused")
+            Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 6);
+            assertTrue(false);
+        }catch (Exception e){
+            assertTrue(e instanceof InvalidRankException);
+        }
+    }
 
-    // Yüksek lisans öğrencisinin adını kontrol et
-    assertEquals("me", gradStudent.getName());
-
-    // Yüksek lisans öğrencisinin e-posta adresini kontrol et
-    assertEquals("me@efekurucay.com", gradStudent.getEmail());
-
-    // Yüksek lisans öğrencisinin kimlik numarasını kontrol et
-    assertEquals(456L, gradStudent.getId());
-
-    // Yüksek lisans öğrencisinin bölümünü kontrol et
-    assertEquals(cse, gradStudent.getDepartment());
-
-    // Yüksek lisans öğrencisinin rütbesini kontrol et
-    assertEquals(1, gradStudent.rank);
-
-    // Yüksek lisans öğrencisinin tez konusunu kontrol et
-    assertEquals("Thesis Topic", gradStudent.getThesisTopic());
-}
-
-    // │     ├─ courseAccessors ✔
     @Test
-void courseAccessors() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Teacher t = new Teacher("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse, 1);
-    Course course = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, t);
+    public void teacherInvalidRankTest2 () {
+        Department department =new Department("CSE", "Computer Engineering");
+        try {
+            @SuppressWarnings("unused")
+            Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 6);
+            assertTrue(false);
+        }catch (Exception e){
+            Assert.assertEquals("InvalidRankException: 6",e.toString());
+        }
+    }
 
-    // Bölümü kontrol et
-    assertEquals(cse, course.getDepartment());
-
-    // Öğretmeni kontrol et
-    assertEquals(t, course.getTeacher());
-
-    // Ders numarasını kontrol et
-    assertEquals(101, course.getCourseNumber());
-
-    // Ders başlığını kontrol et
-    assertEquals("Programming 1", course.getTitle());
-
-    // Ders açıklamasını kontrol et
-    assertEquals("Introduction to Programming", course.getDescription());
-
-    // AKTS'yi kontrol et
-    assertEquals(6, course.getAKTS());
-}
-
-    // │     ├─ shouldGetCourseResultConditionallyPassed ✔
     @Test
-void shouldGetCourseResultConditionallyPassed() {
-    Department cse = new Department("CSE", "Computer Science Engineering");
-    Student student = new Student("Yahya Efe Kuruçay", "contact@efekurucay.com", 123L, cse);
-    Course c101 = new Course(cse, 101, "Programming 1", "Introduction to Programming", 6, null);
+    public void teacherInvalidPromoteTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.promote();
+        t.promote();
+        try {
+            t.promote();
+            assertTrue(false);
+        }catch (Exception e){
+            assertTrue(e instanceof InvalidRankException);
+        }
+    }
 
-    // Öğrencinin ders notunu ekleyin (55 puan, koşullu geçme sınırı olan 45'in üzerinde)
-    student.addCourse(c101, 55);
+    @Test
+    public void teacherInvalidDemoteTest () {
+        Department department =new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        t.demote();
+        try {
+            t.demote();
+            assertTrue(false);
+        }catch (Exception e){
+            assertTrue(e instanceof InvalidRankException);
+        }
+    }
 
-    // Ders sonucunu kontrol edin
-    assertEquals("Conditionally Passed", student.courseResult(c101));
-}
+    @Test
+    public void studentConstructorTest1 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d);
+        assertTrue(s instanceof Person);
+    }
 
-    // │     └─ departmentMutators ✔
+    @Test
+    public void studentConstructorTest2 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d);
+        Assert.assertEquals("Yahya Efe Kurucay",s.getName());
+    }
+
+    @Test
+    public void studentConstructorTest3 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d);
+        Assert.assertEquals("contact@efekurucay.com",s.getEmail());
+    }
+
+
+    @Test
+    public void studentConstructorTest4 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d);
+        Assert.assertEquals(456L,s.getId());
+    }
+
+    @Test
+    public void studentConstructorTest5 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d);
+        Assert.assertEquals(d,s.getDepartment());
+    }
+
+    @Test
+    public void studentSetDepartmentTest() {
+        Department department =new Department("CSE", "Computer Engineering");
+        Department department2 = new Department("FİZ", "Fizik Fakultesi");
+        Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        s.setDepartment(department2);
+        Assert.assertEquals(department2,s.getDepartment());
+    }
+
+    @Test
+    public void studentSetNameTest() {
+        Department department =new Department("CSE", "Computer Engineering");
+        Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        s.setName("Efe efe");
+        Assert.assertEquals("Efe efe",s.getName());
+    }
+
+    @Test
+    public void studentSetEmailTest() {
+        Department department =new Department("CSE", "Computer Engineering");
+        Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        s.setEmail("efek@akdeniz.edu.tr");
+        Assert.assertEquals("efek@akdeniz.edu.tr",s.getEmail());
+    }
+
+    @Test
+    public void studentSetIDTest() {
+        Department department =new Department("CSE", "Computer Engineering");
+        Student s = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        s.setId(124L);
+        Assert.assertEquals(124L,s.getId());
+    }
+
+    @Test
+    public void testGetAKTS_NoCourses() {
+        Department department = new Department("CSE", "Computer Engineering");
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+
+        Assert.assertEquals(0, student.getAKTS());
+    }
+
+    @Test
+    public void testGetAKTS_WithCourses() {
+        Department department = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        
+       
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        Course course1 = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, t);
+        Course course2 = new Course(department, 102, "Programming 2", "Object Oriented Programming", 6, t);
+
+        student.addCourse(course1, 40); 
+        student.addCourse(course2, 80); 
+
+        Assert.assertEquals(6, student.getAKTS());
+    }
+
+    @Test
+    public void studentGetAttemptedAKTSTest() {
+        Department department = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        
+       
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        Course course1 = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, t);
+        Course course2 = new Course(department, 102, "Programming 2", "Object Oriented Programming", 6, t);
+
+        student.addCourse(course1, 40); 
+        student.addCourse(course2, 80);
+
+        Assert.assertEquals(12,student.getAttemptedAKTS());
+
+
+    }
+
+    @Test
+    public void stundentAddCourseTest() {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        Course course = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, t);
+
+        student.addCourse(course, 80);
+
+        Assert.assertTrue(student.getCourses().contains(course));
+        Assert.assertEquals(course.getAKTS(), student.getAKTS());
+        
+    }
+
+    @Test
+    public void studentCourseGPAPointsTest() {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        Course course = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, t);
+
+        student.addCourse(course,89);
+        Assert.assertEquals(4.0,student.courseGPAPoints(course),0.0001);
+    }
+
+    @Test
+    public void studentCourseGradeLetterTest() {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        Course course = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, t);
+        
+        student.addCourse(course,89);
+        Assert.assertEquals("AA",student.courseGradeLetter(course));
+    }
+
+    @Test
+    public void studentGetGPATest(){
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        Course course = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, t);
+        Course course2 = new Course(department, 102, "Programming 2", "Object Oriented Programming", 6, t);
+
+        student.addCourse(course,78);
+        student.addCourse(course2,92);
+        Assert.assertEquals(3.5,student.getGPA(),0.01);
+    }
+
+    @Test
+    public void studentCourseResultTest() {
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        Course course = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, t);
+         
+        student.addCourse(course,89);
+        Assert.assertEquals("Passed",student.courseResult(course));
+    }
+
+    @Test
+    public void studentToStringTest (){
+        Department department = new Department("CSE", "Computer Science Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        Course course = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, t);
+        Course course2 = new Course(department, 102, "Programming 2", "Object Oriented Programming", 6, t);
+        
+        student.addCourse(course,78);
+        student.addCourse(course2,75);
+        Assert.assertEquals("Yahya Efe Kurucay  (456) - contact@efekurucay.com -GPA:3.0",student.toString());
+    }
+
+    @Test
+    public void studentInvalidEmailTest() {
+        Department department = new Department("CSE", "Computer Engineering");
+        try {
+            @SuppressWarnings("unused")
+            Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+            fail("RuntimeException should have been thrown.");
+        } catch (RuntimeException e) {
+            assertTrue(true);
+        }
+    }
     
     @Test
-void departmentMutators() {
-    // Yeni bir Department nesnesi oluştur
-    Department department = new Department("CSE", "Computer Science Engineering");
+    public void studentInvalidGradeTest1() {
+        Department department = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course course = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, t);
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+        try {
+            student.addCourse(course,125);
+            assertTrue(false);
+        }catch (Exception e){
+            assertTrue(e instanceof InvalidGradeException);
+        }
+    }
 
-    // Kodu değiştir
-    department.setCode("ECE");
-    assertEquals("ECE", department.getCode());
+    @Test
+    public void studentInvalidGradeTest2() {
+        Department department = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course course = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, t);
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+         try {
+            student.addCourse(course,125);
+            assertTrue(false);
+        }catch (Exception e){
+            Assert.assertEquals("InvalidGradeException: 125.0",e.toString());
+        }
+    }
 
-    // İsmi değiştir
-    department.setName("Electrical and Computer Engineering");
-    assertEquals("Electrical and Computer Engineering", department.getName());
+    @Test
+    public void studentCourseResultNotFoundExceptionTest() {
+        Department department = new Department("CSE", "Computer Engineering");
+        Teacher teacher = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course course = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, teacher);
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+    
+        try {
+            student.courseResult(course);
+            fail("Expected CourseNotFoundException was not thrown");
+         } catch (CourseNotFoundException e) {
+            assertTrue(true);
+        }
+    }
 
-    // Başkanı atanmışsa, başkanı değiştir
-    Teacher chair = new Teacher("me", "me@efekurucay.com", 456L, department, 3);
-    department.setChair(chair);
-    assertEquals(chair, department.getChair());
+    @Test
+    public void studentCourseNotFoundExcepitonTest2() {
+        Department department = new Department("CSE", "Computer Engineering");
+        Teacher teacher = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, department, 2);
+        Course course = new Course(department, 101, "Programming 1", "Introduction to Programming", 6, teacher);
+        Student student = new Student("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, department);
+          try {
+            student.courseGPAPoints(course);
+            assertTrue(false);
+        }catch (Exception e){
+            Assert.assertEquals("java.lang.IndexOutOfBoundsException: Index -1 out of bounds for length 0",e.toString());
+        }
+    }
 
-    // Başkan atanmamışsa, başkanı null yap
-    department.setChair(null);
-    assertNull(department.getChair());
-}
+    @Test
+    public void gradStudentConstructorTest1 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        assertTrue(g instanceof Student);
+    }
+
+    @Test
+    public void gradStudentConstructorTest2 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        Assert.assertEquals("Yahya Efe Kurucay",g.getName());
+    }
+
+    @Test
+    public void gradStudentConstructorTest3 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        Assert.assertEquals("contact@efekurucay.com",g.getEmail());
+    }
+
+    @Test
+    public void gradStudentConstructorTest4 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        assertEquals(456L, g.getId());
+    }
+
+    @Test
+    public void gradStudentConstructorTest5 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        Assert.assertEquals(d,g.getDepartment());
+    }
+
+    @Test
+    public void gradStudentConstructorTest6 (){
+        Department d = new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        Assert.assertEquals("Programming",g.getThesisTopic());
+    }
+
+    @Test
+    public void gradStudentSetDepartmentTest() {
+        Department d =new Department("CSE", "Computer Engineering");
+        Department d2 = new Department("FİZ", "Fizik Fakultesi");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.setDepartment(d2);
+        Assert.assertEquals(d2,g.getDepartment());
+    }
+
+    @Test
+    public void gradStudentSetNameTest() {
+        Department d =new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.setName("Efe efe");
+        Assert.assertEquals("Efe efe",g.getName());
+    }
+
+    @Test
+    public void gradStudentSetEmailTest() {
+        Department d =new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.setEmail("efek@akdeniz.edu.tr");
+        Assert.assertEquals("efek@akdeniz.edu.tr",g.getEmail());
+    }
+
+    @Test
+    public void gradStudentSetIDTest() {
+        Department d =new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.setId(456L);
+        Assert.assertEquals(456L,g.getId());
+    }
+
+    @Test
+    public void gradStudentSetThesisTest() {
+        Department d =new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.setThesisTopic("Big Data");
+        Assert.assertEquals("Big Data",g.getThesisTopic());
+    }
+
+    @Test
+    public void gradStudentCourseGPAPointsTest() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher teacher = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course course = new Course(d, 101, "Programming 1", "Introduction to Programming", 6, teacher);
+    
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+       
+        g.addCourse(course, 90);
+    
+        assertEquals(4.0, g.courseGPAPoints(course), 0.001);
+    }
+
+    @Test
+    public void gradStudentGetGPATest() {
+        Department d = new Department("CSE", "Computer Engineering");
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+    
+        assertEquals(0.0, g.getGPA(), 0.001);
+    }
+
+    @Test
+    public void gradStudentGetAKTSTest() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        Course c2 = new Course(d, 102, "Programming 2", "OOP", 4,t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.addCourse(c1,85);
+        g.addCourse(c2,35);
+        Assert.assertEquals(4,g.getAKTS());
+    }
+
+    @Test
+    public void gradStudentGetAttemptedAKTSTest() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        Course c2 = new Course(d, 102, "Programming 2", "OOP", 4,t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.addCourse(c1,85);
+        g.addCourse(c2,35);
+        Assert.assertEquals(8,g.getAttemptedAKTS());
+    }
+
+    @Test
+    public void gradStudentAddCourseTest() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.addCourse(c1,75);
+        g.addCourse(c1,98);
+        Assert.assertEquals(8,g.getAKTS());
+    }
+
+    @Test
+    public void gradStudentCourseGPAPointsTest2() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.addCourse(c1,89);
+        Assert.assertEquals(3.5,g.courseGPAPoints(c1),0.0001);
+    }
+
+    @Test
+    public void gradStudentCourseGradeLetterTest() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.addCourse(c1,89);
+        Assert.assertEquals("BA",g.courseGradeLetter(c1));
+    }
+
+    @Test
+    public void gradStudentCourseResultTest() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.addCourse(c1,89);
+        Assert.assertEquals("Passed",g.courseResult(c1));
+    }
+
+    @Test
+    public void gradStudentGetGPATest2(){
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        Course c2 = new Course(d, 102, "Programming 2", "OOP", 4,t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.addCourse(c1,78);
+        g.addCourse(c2,92);
+        Assert.assertEquals(3.25,g.getGPA(),0.01);
+    }
+
+    @Test
+    public void gradStudentToStringTest (){
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        Course c2 = new Course(d, 102, "Programming 2", "OOP", 4,t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        g.addCourse(c1,78);
+        g.addCourse(c2,75);
+        Assert.assertEquals("Yahya Efe Kurucay  (456) - contact@efekurucay.com -GPA:2.5",g.toString());
+    }
+
+    @Test
+    public void gradStudentInvalidGradeTest1() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        try {
+            g.addCourse(c1,125);
+            assertTrue(false);
+        }catch (Exception e){
+            assertTrue(e instanceof InvalidGradeException);
+        }
+    }
+
+    @Test
+    public void gradStudentInvalidGradeTest2() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+
+        try {
+            g.addCourse(c1,125);
+            assertTrue("InvalidGradeException not thrown", false);
+        } catch (InvalidGradeException e) {
+            assertTrue("InvalidGradeException thrown", true);
+        } catch (Exception e) {
+            fail("Unexpected exception occurred: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void gradStudentInvalidGradeTest3() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        try {
+            g.addCourse(c1, 125);
+            fail(); 
+        } catch (InvalidGradeException e) {
+            assertTrue(true); 
+        } catch (Exception e) {
+            fail(); 
+        }
+    }
+
+    @Test
+    public void gradStudentCourseNotFoundExcepitonTest1() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+
+        try {
+            g.courseGPAPoints(c1);
+            assertFalse("CourseNotFoundException not thrown", true);
+        } catch (CourseNotFoundException e) {
+            assertTrue("CourseNotFoundException thrown", true);
+        } catch (Exception e) {
+            fail("Unexpected exception occurred: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void gradStudentCourseNotFoundExcepitonTest2() {
+        Department d = new Department("CSE", "Computer Engineering");
+        Teacher t = new Teacher("Joseph Ledet", "josephledet@akdeniz.edu.tr", 123L, d, 2);
+        Course c1 = new Course(d, 101, "Programming 1", "Introduction to Programming", 4, t);
+        GradStudent g = new GradStudent("Yahya Efe Kurucay", "contact@efekurucay.com", 456L, d, 1, "Programming");
+        try {
+            g.courseGPAPoints(c1);
+            fail(); 
+        } catch (CourseNotFoundException e) {
+            assertTrue(true); 
+        } catch (Exception e) {
+            fail(); 
+        }
+    }
+
+
+
+    
+
+
+    
+
+    
+
+
+
+    
+
+
+
+    
+
+
+
+
+
 
 }

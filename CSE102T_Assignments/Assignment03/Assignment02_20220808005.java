@@ -369,6 +369,10 @@ class Teacher extends Person{
     public String toString() {
         return super.toString();
     }
+    public Object getRank() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRank'");
+    }
 }
 class Student extends Person{
     private int failedAKTS;
