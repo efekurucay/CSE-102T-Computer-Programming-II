@@ -9,11 +9,62 @@ import java.util.ArrayList;
 
  * Description: Assignment02
 
- * Score: ?
+ * Score:87
 
  * Website: https://efekurucay.com
 
 *---------------------------------------------------*/
+/*
+ * Bu bir otomatik maildir!!
+ -------------START----------------
+20220808005 - Assignment02->87
+Test Result
+╷
+├─ JUnit Jupiter ✔
+├─ JUnit Vintage ✔
+│  └─ Assignment02_20220808005Test ✔
+│     ├─ shouldNotCreateDepartmentWithInvalidID ✔
+│     ├─ shouldNotCreateCourseWithDifferentDepartment ✔
+│     ├─ departmentShouldNotSetChairDifferentDepartment ✘ Should have thrown DepartmentMismatchException
+│     ├─ DepartmentMismatchExceptionShouldHaveDepartmentTeacherConstructor ✔
+│     ├─ shouldGetGPA ✔
+│     ├─ shouldCourseResultThrowCourseNotFoundException ✘ Should have thrown CourseNotFoundException
+│     ├─ shouldAddCourse ✔
+│     ├─ departmentShouldSetChair ✔
+│     ├─ shouldCreateCourse ✔
+│     ├─ shouldNotCreateGradStudent ✔
+│     ├─ shouldCreateStudent ✔
+│     ├─ teachershouldSetDepartmentAndChair ✘ Should set department expected:<Department@4e32a067> but was:<Department@4a0d2d79>
+│     ├─ gradStudentCourseResultThrowException ✘ Index 0 out of bounds for length 0
+│     ├─ shouldGetCourseGPAPoints ✔
+│     ├─ courseShouldNotSetTeacherFromDifferentDpt ✔
+│     ├─ shouldReplaceCourse ✘ expected:<11> but was:<17>
+│     ├─ shouldGetCourseGradeLetter ✔
+│     ├─ shouldCreateTeacher ✔
+│     ├─ shouldCreateDepartment ✔
+│     ├─ teachershouldSetDepartment ✘ Should set department expected:<Department@6770946d> but was:<Department@69b776f3>
+│     ├─ teacherShouldPromoteDemote ✔
+│     ├─ shouldGetGPAwithOneFailedCourse ✔
+│     ├─ shouldGetCourseResultFailed ✔
+│     ├─ DepartmentMismatchExceptionShouldHaveCourseTeacherConstructor ✔
+│     ├─ courseMutators ✔
+│     ├─ teacherShouldNotDemote ✔
+│     ├─ gradStudentShouldGetCourseGPAPoints ✔
+│     ├─ gradStudentShouldGetCourseResult ✔
+│     ├─ teacherShouldNotPromote ✔
+│     ├─ gradStudentShouldGetCourseGradeLetter ✔
+│     ├─ shouldThrowInvalidGradeException ✔
+│     ├─ departmentAccessors ✔
+│     ├─ departmentShouldNotSetInvalidID ✔
+│     ├─ shouldCreateGradStudent ✔
+│     ├─ courseAccessors ✔
+│     ├─ shouldGetCourseResultConditionallyPassed ✔
+│     └─ departmentMutators ✔
+└─ JUnit Platform Suite ✔
+
+
+--------------END-----------------
+ */
 
 /*
  *            __     _                                                          

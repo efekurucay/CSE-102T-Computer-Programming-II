@@ -15,6 +15,69 @@ import java.util.regex.Pattern;
  * Website: https://efekurucay.com
 
 *---------------------------------------------------*/
+/*
+ * Bu bir otomatik maildir!!
+ -------------START----------------
+20220808005 - Assignment01->89
+Test Result
+╷
+├─ JUnit Jupiter ✔
+├─ JUnit Vintage ✔
+│  └─ Assignment01_20220808005Test ✔
+│     ├─ shouldCreateTeacherWithInvalidRank ✔
+│     ├─ teacherShouldPromote ✔
+│     ├─ personShouldGetEmail ✔
+│     ├─ teacherShouldGetTitleProfessor ✔
+│     ├─ shouldCreateCourse ✔
+│     ├─ gradStudentShouldSetThesis ✔
+│     ├─ courseShouldSetNumber ✔
+│     ├─ studentShouldGetAKTS ✔
+│     ├─ courseShouldNotSetInvalidDepartment ✘ Expected RuntimeException
+│     ├─ courseShouldGetAKTS ✔
+│     ├─ shouldCreateStudent ✔
+│     ├─ personShouldNotSetInvalidEmail ✔
+│     ├─ gradStudentShouldGetThesis ✔
+│     ├─ courseShouldGetNumber ✔
+│     ├─ personShouldToString ✔
+│     ├─ personShouldGetID ✔
+│     ├─ personShouldSetID ✔
+│     ├─ shouldCreatePerson ✔
+│     ├─ personShouldGetDepartment ✔
+│     ├─ shouldCreateTeacher ✔
+│     ├─ courseShouldNotSetInvalidAKTS ✘ Expected RuntimeException
+│     ├─ shouldNotCreatePersonWithInvalidDepartment ✔
+│     ├─ teacherShouldToString ✔
+│     ├─ courseShouldNotSetInvalidNumber ✘ Expected RuntimeException
+│     ├─ personShouldSetDepartment ✔
+│     ├─ personShouldGetName ✔
+│     ├─ teacherShouldDemote ✔
+│     ├─ shouldNotCreateCourseWithInvalidDepartment ✘ Expected RuntimeException
+│     ├─ teacherShouldNotDemote ✘ java.lang.AssertionError
+│     ├─ studentShouldPassCourse ✔
+│     ├─ courseShouldSetTitle ✔
+│     ├─ teacherShouldNotPromote ✔
+│     ├─ teacherShouldGetTitleAssociateProfessor ✔
+│     ├─ courseShouldSetAKTS ✔
+│     ├─ courseShouldGetTitle ✔
+│     ├─ teacherShouldGetTitleAssistantProfessor ✔
+│     ├─ courseShouldReturnCourseCode ✔
+│     ├─ personShouldNotSetInvalidDepartment ✔
+│     ├─ courseShouldGetDepartment ✔
+│     ├─ shouldCreateGradStudent ✔
+│     ├─ courseShouldToString ✔
+│     ├─ testInheritence ✔
+│     ├─ shouldNotCreatePersonWithInvalidEmail ✔
+│     ├─ personShouldSetName ✔
+│     ├─ courseShouldSetDepartment ✔
+│     ├─ shouldNotCreateCourseWithInvalidNumber ✘ Expected RuntimeException
+│     └─ personShouldSetEmail ✔
+└─ JUnit Platform Suite ✔
+
+
+--------------END-----------------
+
+
+ */
 /***
  *    ███████╗███████╗███████╗
  *    ██╔════╝██╔════╝██╔════╝
