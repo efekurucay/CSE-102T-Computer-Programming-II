@@ -152,6 +152,7 @@ class Department{
         }
     }
 }
+
 class Course{
     private Department department;
     private Teacher teacher;

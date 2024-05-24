@@ -17,7 +17,7 @@ import static org.junit.Assert.fail;
 
  * Description: Assignment03Tests
 
- * Score:?
+ * Score:30 ( tüm sınıf birbirinden kopyaladi çoğu kişi 30 aldı)
 
  * Website: https://efekurucay.com
 
